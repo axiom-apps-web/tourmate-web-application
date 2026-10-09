@@ -108,4 +108,24 @@ const useTourManagementStore = defineStore('tour-management',() => {
             errors.value.push(error)
         })
     }
+
+    return {
+        tours,
+        tourSchedules,
+        errors,
+        toursLoaded,
+        tourSchedulesLoaded,
+        fetchTours,
+        fetchTourSchedules,
+        getTourById,
+        getTourScheduleById,
+        addTour,
+        addTourSchedule,
+        updateTour,
+        updateTourSchedule,
+        deleteTour,
+        deleteTourSchedule
+    }
 })
+
+export default useTourManagementStore;
