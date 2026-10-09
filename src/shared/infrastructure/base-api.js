@@ -19,9 +19,9 @@ export class BaseApi {
     /**
      * Initializes the Axios HTTP client with the base URL from environment variables
      */
-    constructor() {
+    constructor(baseURL = tourmateApi) {
         this.#http = axios.create({
-            baseURL: tourmateApi,
+            baseURL,
             headers: {
                 'Content-Type': 'application/json'
             },
