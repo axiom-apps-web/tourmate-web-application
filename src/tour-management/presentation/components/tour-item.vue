@@ -67,7 +67,7 @@ const menuTokens = {
       />
       <pv-menu ref="menu" :model="menuItems" popup>
         <template #item="{item, props: itemProps}">
-          <a v-bind="itemProps.action" :class="['tour-menu-item', {'tour-menu-item--danger': item.danger}]">
+          <a v-bind="itemProps.action" :class="['tour-menu-item', {'tour-menu-item-danger': item.danger}]">
             <i :class="item.icon" aria-hidden="true"></i>
             <span>{{ item.label }}</span>
           </a>
@@ -195,7 +195,11 @@ const menuTokens = {
   color: var(--tm-text);
 }
 
-:deep(.p-menu-item-content .tour-menu-item--danger) {
+.tour-menu-item-danger {
+  color: var(--tm-danger);
+}
+
+:deep(.p-menu-item-content) {
   color: var(--tm-danger);
 }
 </style>

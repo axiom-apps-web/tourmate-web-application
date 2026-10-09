@@ -73,7 +73,7 @@
     "table_scroll": "Tours table; scroll horizontally to see all columns",
     "empty_title": "No tours yet",
     "empty_description": "Create your first tour to start building your catalog.",
-    "catalog_count": "{count} experiences in your catalog",
+    "catalog_count": "experiences in your catalog",
     "edit": "Edit tour",
     "delete": "Delete tour",
     "delete_confirm": "Delete “{title}”? This action cannot be undone.",

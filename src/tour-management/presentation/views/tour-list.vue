@@ -52,7 +52,7 @@ const confirmDelete = (tour) => {
 
     <div class="catalog-summary">
       <span class="catalog-summary__icon" aria-hidden="true"><i class="pi pi-map"></i></span>
-      <p aria-live="polite"><strong>{{ tours.length }}</strong> {{ t('tours.catalog_count', {count: tours.length}) }}</p>
+      <p aria-live="polite"> <strong>{{ tours.length }}</strong> {{ t('tours.catalog_count') }}</p>
     </div>
 
     <p v-if="!toursLoaded && !errors.length" class="catalog-state" role="status" aria-live="polite">
