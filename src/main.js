@@ -33,7 +33,9 @@ import {
     Toast,
     Textarea,
     ToastService,
-    Toolbar
+    Toolbar,
+    Divider,
+    ProgressSpinner
 } from "primevue";
 import router from "./router.js";
 import pinia from "./pinia.js";
@@ -70,6 +72,8 @@ createApp(App)
     .component('pv-textarea',       Textarea)
     .component('pv-toolbar',        Toolbar)
     .component('pv-toast',          Toast)
+    .component('pv-divider', Divider)
+    .component('pv-progress-spinner', ProgressSpinner)
     .directive('tooltip',           Tooltip)
     .use(router)
     .use(pinia)
