@@ -19,6 +19,11 @@ const items = [
   {label: 'option.about', to: '/about'},
   {label: 'option.activeTours', to: '/tour-monitoring/activeTours'},
 
+  {label: 'option.feedback_and_reviews', to: '/feedback-and-tour-reviews/reviews'},
+
+  {label: 'option.safety_and_incident', to: '/incidents'},
+
+
 ];
 </script>
 
