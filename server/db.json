@@ -1,0 +1,1262 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "carlos.quispe@tourmate.pe",
+      "role": "ADMIN",
+      "firstName": "Carlos",
+      "lastName": "Quispe",
+      "passwordHash": "$2a$10$ujPeIxdGcBefB0hoO8Kz.c2sjht0lLOxJednRBuLDtYSpKH4Us.hA"
+    },
+    {
+      "id": 2,
+      "email": "maria.huaman@tourmate.pe",
+      "role": "AGENCY_OWNER",
+      "firstName": "María",
+      "lastName": "Huamán",
+      "passwordHash": "$2a$10$WjFcQWK4uSMLD18EQdSP/0syQbDkhdXipz3fCJ403rAw49jlooFLq"
+    },
+    {
+      "id": 3,
+      "email": "luis.mamani@tourmate.pe",
+      "role": "AGENCY_OWNER",
+      "firstName": "Luis",
+      "lastName": "Mamani",
+      "passwordHash": "$2a$10$aAxK8SGNRd5X3ZzzgOdenkvdajgxb3Njqwxh2/DEfgvq1kb8HjIbH"
+    },
+    {
+      "id": 4,
+      "email": "rosa.flores@tourmate.pe",
+      "role": "AGENCY_OWNER",
+      "firstName": "Rosa",
+      "lastName": "Flores",
+      "passwordHash": "$2a$10$.3SqxkXIXvoZ/2Z0VoHwbbrqS9C7/9xoomnN51EPZfQ6YWElYvZ.z"
+    },
+    {
+      "id": 5,
+      "email": "jorge.ramos@tourmate.pe",
+      "role": "GUIDE",
+      "firstName": "Jorge",
+      "lastName": "Ramos",
+      "passwordHash": "$2a$10$z8Ukij5Zj0.QwJia.PH7B30nqspLqAi6wDL5A6GIHbClaZlEUJuHJ"
+    },
+    {
+      "id": 6,
+      "email": "ana.torres@tourmate.pe",
+      "role": "GUIDE",
+      "firstName": "Ana",
+      "lastName": "Torres",
+      "passwordHash": "$2a$10$YgJprXGJW6CNGGSCIE8S48qJ81ihCepeQY5jTQj49o8zF/1kBGvmu"
+    },
+    {
+      "id": 7,
+      "email": "pedro.condori@tourmate.pe",
+      "role": "GUIDE",
+      "firstName": "Pedro",
+      "lastName": "Condori",
+      "passwordHash": "$2a$10$UbJCbvNGe/Y.gqcXriB60qj6KSfdSBe8OZf2e3DvJ7riHphkdmttW"
+    },
+    {
+      "id": 8,
+      "email": "lucia.vargas@tourmate.pe",
+      "role": "GUIDE",
+      "firstName": "Lucía",
+      "lastName": "Vargas",
+      "passwordHash": "$2a$10$sGlwbqaUJmE7g0BF1zGS.v1TOzwdieVqkf13QspsDkCq9.Jp9tway"
+    },
+    {
+      "id": 9,
+      "email": "diego.castillo@tourmate.pe",
+      "role": "TOURIST",
+      "firstName": "Diego",
+      "lastName": "Castillo",
+      "passwordHash": "$2a$10$EGmGaqfzcbtoLHWQT4yu/jUPc15OUZiHG1Z0L5RSobixg1JOORFaZ"
+    },
+    {
+      "id": 10,
+      "email": "sofia.rojas@tourmate.pe",
+      "role": "TOURIST",
+      "firstName": "Sofía",
+      "lastName": "Rojas",
+      "passwordHash": "$2a$10$VGIQeVqeqUnV.FyERXNPejqVtKadrRSRsHDDh5m.7bD09Crn8nLjH"
+    },
+    {
+      "id": 11,
+      "email": "miguel.salazar@tourmate.pe",
+      "role": "TOURIST",
+      "firstName": "Miguel",
+      "lastName": "Salazar",
+      "passwordHash": "$2a$10$8i0G4To5FbaFCtjwu1aW1h7T5sxz/LxBrdg1s7prGmx94ZO68JUdU"
+    },
+    {
+      "id": 12,
+      "email": "valeria.mendoza@tourmate.pe",
+      "role": "TOURIST",
+      "firstName": "Valeria",
+      "lastName": "Mendoza",
+      "passwordHash": "$2a$10$CWPsd7iEvtV.qPtJzkkn5Fo6/CimfvfpqK4VAAHyvdr9iGO3nrpzC"
+    },
+    {
+      "id": 13,
+      "email": "andres.paredes@tourmate.pe",
+      "role": "TOURIST",
+      "firstName": "Andrés",
+      "lastName": "Paredes",
+      "passwordHash": "$2a$10$923bcT5ELaz702.pgjHR8UPWDJcYo6PtiqOSheHLyoMatD9P4Epp9"
+    },
+    {
+      "id": 14,
+      "email": "camila.rios@tourmate.pe",
+      "role": "TOURIST",
+      "firstName": "Camila",
+      "lastName": "Ríos",
+      "passwordHash": "$2a$10$TtbFRAqQ7ocvARmZVGn.t0ooWs8FloAQ8jzn.jddz54U/7vl7VcQy"
+    },
+    {
+      "id": 15,
+      "email": "daniel.chavez@tourmate.pe",
+      "role": "TOURIST",
+      "firstName": "Daniel",
+      "lastName": "Chávez",
+      "passwordHash": "$2a$10$xvkarw9h9nw00BdEx6mx5bAZXcce6qV5vr9NqTuraW6O8boE99yqB"
+    },
+    {
+      "id": 16,
+      "email": "paula.nunez@tourmate.pe",
+      "role": "TOURIST",
+      "firstName": "Paula",
+      "lastName": "Núñez",
+      "passwordHash": "$2a$10$F7lZV0XMuuxYfmWpecJu.4/qfgFTCoANRV2Qh1sKxVmppj4Luz/Go"
+    }
+  ],
+  "agencies": [
+    {
+      "id": 1,
+      "ownerId": 2,
+      "businessName": "Andes Aventura SAC",
+      "description": "Tours de aventura y trekking en Cusco y Valle Sagrado.",
+      "phone": "+51 984 123 456",
+      "contactEmail": "contacto@andesaventura.pe",
+      "website": "https://andesaventura.pe",
+      "address": "Av. El Sol 345, Cusco"
+    },
+    {
+      "id": 2,
+      "ownerId": 3,
+      "businessName": "Costa Verde Tours",
+      "description": "Recorridos culturales y gastronómicos por Lima.",
+      "phone": "+51 987 654 321",
+      "contactEmail": "info@costaverdetours.pe",
+      "website": "https://costaverdetours.pe",
+      "address": "Av. Larco 1150, Miraflores, Lima"
+    },
+    {
+      "id": 3,
+      "ownerId": 4,
+      "businessName": "Arequipa Explora",
+      "description": "Excursiones al Cañón del Colca y volcanes de Arequipa.",
+      "phone": "+51 959 222 111",
+      "contactEmail": "hola@arequipaexplora.pe",
+      "website": "https://arequipaexplora.pe",
+      "address": "Calle Mercaderes 212, Arequipa"
+    }
+  ],
+  "tour_guides": [
+    {
+      "id": 1,
+      "userId": 5,
+      "agencyId": 1,
+      "languages": [
+        "Español",
+        "Inglés",
+        "Quechua"
+      ],
+      "phoneNumber": "+51 981 111 222"
+    },
+    {
+      "id": 2,
+      "userId": 6,
+      "agencyId": 2,
+      "languages": [
+        "Español",
+        "Inglés",
+        "Francés"
+      ],
+      "phoneNumber": "+51 982 333 444"
+    },
+    {
+      "id": 3,
+      "userId": 7,
+      "agencyId": 1,
+      "languages": [
+        "Español",
+        "Inglés"
+      ],
+      "phoneNumber": "+51 983 555 666"
+    },
+    {
+      "id": 4,
+      "userId": 8,
+      "agencyId": 3,
+      "languages": [
+        "Español",
+        "Inglés",
+        "Portugués"
+      ],
+      "phoneNumber": "+51 984 777 888"
+    }
+  ],
+  "tours": [
+    {
+      "id": 1,
+      "agencyId": 1,
+      "title": "Machu Picchu Clásico",
+      "description": "Visita guiada a la ciudadela inca de Machu Picchu.",
+      "duration": "1 día",
+      "difficulty": "MEDIUM",
+      "priceAmount": 180,
+      "priceCurrency": "USD",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 2,
+      "agencyId": 1,
+      "title": "Camino Inca 4 días",
+      "description": "Trekking clásico por el Camino Inca hasta Machu Picchu.",
+      "duration": "4 días",
+      "difficulty": "HARD",
+      "priceAmount": 650,
+      "priceCurrency": "USD",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 3,
+      "agencyId": 1,
+      "title": "Valle Sagrado Express",
+      "description": "Pisac, Ollantaytambo y Chinchero en un solo día.",
+      "duration": "1 día",
+      "difficulty": "EASY",
+      "priceAmount": 90,
+      "priceCurrency": "USD",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 4,
+      "agencyId": 2,
+      "title": "Lima Colonial y Centro Histórico",
+      "description": "Plaza de Armas, Catedral y Convento de San Francisco.",
+      "duration": "4 horas",
+      "difficulty": "EASY",
+      "priceAmount": 45,
+      "priceCurrency": "USD",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 5,
+      "agencyId": 2,
+      "title": "Tour Gastronómico Miraflores",
+      "description": "Degustación de ceviche, anticuchos y pisco sour.",
+      "duration": "3 horas",
+      "difficulty": "EASY",
+      "priceAmount": 70,
+      "priceCurrency": "USD",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 6,
+      "agencyId": 2,
+      "title": "Paracas e Islas Ballestas",
+      "description": "Excursión en bote a las Islas Ballestas y Reserva de Paracas.",
+      "duration": "1 día",
+      "difficulty": "EASY",
+      "priceAmount": 120,
+      "priceCurrency": "USD",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 7,
+      "agencyId": 3,
+      "title": "Cañón del Colca 2 días",
+      "description": "Mirador Cruz del Cóndor y baños termales de Chivay.",
+      "duration": "2 días",
+      "difficulty": "MEDIUM",
+      "priceAmount": 210,
+      "priceCurrency": "USD",
+      "status": "ACTIVE"
+    },
+    {
+      "id": 8,
+      "agencyId": 3,
+      "title": "Ascenso al Misti",
+      "description": "Ascenso al volcán Misti (5,822 m).",
+      "duration": "2 días",
+      "difficulty": "HARD",
+      "priceAmount": 320,
+      "priceCurrency": "USD",
+      "status": "INACTIVE"
+    }
+  ],
+  "checkpoints": [
+    {
+      "id": 1,
+      "tourId": 1,
+      "name": "Estación Ollantaytambo",
+      "latitude": -13.2583,
+      "longitude": -72.2636,
+      "orderIndex": 1,
+      "description": "Punto de control 1: Estación Ollantaytambo."
+    },
+    {
+      "id": 2,
+      "tourId": 1,
+      "name": "Aguas Calientes",
+      "latitude": -13.1547,
+      "longitude": -72.5253,
+      "orderIndex": 2,
+      "description": "Punto de control 2: Aguas Calientes."
+    },
+    {
+      "id": 3,
+      "tourId": 1,
+      "name": "Ciudadela Machu Picchu",
+      "latitude": -13.1631,
+      "longitude": -72.545,
+      "orderIndex": 3,
+      "description": "Punto de control 3: Ciudadela Machu Picchu."
+    },
+    {
+      "id": 4,
+      "tourId": 1,
+      "name": "Mirador Intipunku",
+      "latitude": -13.17,
+      "longitude": -72.534,
+      "orderIndex": 4,
+      "description": "Punto de control 4: Mirador Intipunku."
+    },
+    {
+      "id": 5,
+      "tourId": 2,
+      "name": "Km 82 Piscacucho",
+      "latitude": -13.2486,
+      "longitude": -72.3639,
+      "orderIndex": 1,
+      "description": "Punto de control 1: Km 82 Piscacucho."
+    },
+    {
+      "id": 6,
+      "tourId": 2,
+      "name": "Wayllabamba",
+      "latitude": -13.2,
+      "longitude": -72.5,
+      "orderIndex": 2,
+      "description": "Punto de control 2: Wayllabamba."
+    },
+    {
+      "id": 7,
+      "tourId": 2,
+      "name": "Paso Warmiwañusca",
+      "latitude": -13.21,
+      "longitude": -72.57,
+      "orderIndex": 3,
+      "description": "Punto de control 3: Paso Warmiwañusca."
+    },
+    {
+      "id": 8,
+      "tourId": 2,
+      "name": "Wiñay Wayna",
+      "latitude": -13.19,
+      "longitude": -72.56,
+      "orderIndex": 4,
+      "description": "Punto de control 4: Wiñay Wayna."
+    },
+    {
+      "id": 9,
+      "tourId": 3,
+      "name": "Mercado de Pisac",
+      "latitude": -13.42,
+      "longitude": -71.848,
+      "orderIndex": 1,
+      "description": "Punto de control 1: Mercado de Pisac."
+    },
+    {
+      "id": 10,
+      "tourId": 3,
+      "name": "Ollantaytambo",
+      "latitude": -13.2583,
+      "longitude": -72.2636,
+      "orderIndex": 2,
+      "description": "Punto de control 2: Ollantaytambo."
+    },
+    {
+      "id": 11,
+      "tourId": 3,
+      "name": "Chinchero",
+      "latitude": -13.394,
+      "longitude": -72.046,
+      "orderIndex": 3,
+      "description": "Punto de control 3: Chinchero."
+    },
+    {
+      "id": 12,
+      "tourId": 4,
+      "name": "Plaza de Armas",
+      "latitude": -12.0464,
+      "longitude": -77.03,
+      "orderIndex": 1,
+      "description": "Punto de control 1: Plaza de Armas."
+    },
+    {
+      "id": 13,
+      "tourId": 4,
+      "name": "Catedral de Lima",
+      "latitude": -12.0462,
+      "longitude": -77.0305,
+      "orderIndex": 2,
+      "description": "Punto de control 2: Catedral de Lima."
+    },
+    {
+      "id": 14,
+      "tourId": 4,
+      "name": "Convento San Francisco",
+      "latitude": -12.0462,
+      "longitude": -77.0273,
+      "orderIndex": 3,
+      "description": "Punto de control 3: Convento San Francisco."
+    },
+    {
+      "id": 15,
+      "tourId": 5,
+      "name": "Parque Kennedy",
+      "latitude": -12.1219,
+      "longitude": -77.0297,
+      "orderIndex": 1,
+      "description": "Punto de control 1: Parque Kennedy."
+    },
+    {
+      "id": 16,
+      "tourId": 5,
+      "name": "Mercado Surquillo",
+      "latitude": -12.113,
+      "longitude": -77.02,
+      "orderIndex": 2,
+      "description": "Punto de control 2: Mercado Surquillo."
+    },
+    {
+      "id": 17,
+      "tourId": 5,
+      "name": "Malecón de Miraflores",
+      "latitude": -12.128,
+      "longitude": -77.039,
+      "orderIndex": 3,
+      "description": "Punto de control 3: Malecón de Miraflores."
+    },
+    {
+      "id": 18,
+      "tourId": 6,
+      "name": "Muelle El Chaco",
+      "latitude": -13.834,
+      "longitude": -76.254,
+      "orderIndex": 1,
+      "description": "Punto de control 1: Muelle El Chaco."
+    },
+    {
+      "id": 19,
+      "tourId": 6,
+      "name": "Islas Ballestas",
+      "latitude": -13.738,
+      "longitude": -76.408,
+      "orderIndex": 2,
+      "description": "Punto de control 2: Islas Ballestas."
+    },
+    {
+      "id": 20,
+      "tourId": 6,
+      "name": "Reserva Nacional de Paracas",
+      "latitude": -13.9,
+      "longitude": -76.25,
+      "orderIndex": 3,
+      "description": "Punto de control 3: Reserva Nacional de Paracas."
+    },
+    {
+      "id": 21,
+      "tourId": 7,
+      "name": "Mirador de los Volcanes",
+      "latitude": -15.998,
+      "longitude": -71.533,
+      "orderIndex": 1,
+      "description": "Punto de control 1: Mirador de los Volcanes."
+    },
+    {
+      "id": 22,
+      "tourId": 7,
+      "name": "Chivay",
+      "latitude": -15.637,
+      "longitude": -71.601,
+      "orderIndex": 2,
+      "description": "Punto de control 2: Chivay."
+    },
+    {
+      "id": 23,
+      "tourId": 7,
+      "name": "Cruz del Cóndor",
+      "latitude": -15.602,
+      "longitude": -71.889,
+      "orderIndex": 3,
+      "description": "Punto de control 3: Cruz del Cóndor."
+    },
+    {
+      "id": 24,
+      "tourId": 8,
+      "name": "Base Aguada Blanca",
+      "latitude": -16.28,
+      "longitude": -71.4,
+      "orderIndex": 1,
+      "description": "Punto de control 1: Base Aguada Blanca."
+    },
+    {
+      "id": 25,
+      "tourId": 8,
+      "name": "Campamento Nido de Águilas",
+      "latitude": -16.29,
+      "longitude": -71.41,
+      "orderIndex": 2,
+      "description": "Punto de control 2: Campamento Nido de Águilas."
+    },
+    {
+      "id": 26,
+      "tourId": 8,
+      "name": "Cráter del Misti",
+      "latitude": -16.2944,
+      "longitude": -71.4094,
+      "orderIndex": 3,
+      "description": "Punto de control 3: Cráter del Misti."
+    }
+  ],
+  "tour_schedules": [
+    {
+      "id": 1,
+      "tourId": 1,
+      "departureDatetime": "2026-10-01T06:30:00",
+      "maxCapacity": 10,
+      "status": "IN_PROGRESS"
+    },
+    {
+      "id": 2,
+      "tourId": 1,
+      "departureDatetime": "2026-11-06T07:00:00",
+      "maxCapacity": 20,
+      "status": "SCHEDULED"
+    },
+    {
+      "id": 3,
+      "tourId": 2,
+      "departureDatetime": "2026-10-05T07:00:00",
+      "maxCapacity": 10,
+      "status": "SCHEDULED"
+    },
+    {
+      "id": 4,
+      "tourId": 2,
+      "departureDatetime": "2026-09-20T07:00:00",
+      "maxCapacity": 10,
+      "status": "COMPLETED"
+    },
+    {
+      "id": 5,
+      "tourId": 3,
+      "departureDatetime": "2026-10-06T07:00:00",
+      "maxCapacity": 10,
+      "status": "SCHEDULED"
+    },
+    {
+      "id": 6,
+      "tourId": 3,
+      "departureDatetime": "2026-11-08T07:00:00",
+      "maxCapacity": 20,
+      "status": "SCHEDULED"
+    },
+    {
+      "id": 7,
+      "tourId": 4,
+      "departureDatetime": "2026-10-01T07:00:00",
+      "maxCapacity": 12,
+      "status": "IN_PROGRESS"
+    },
+    {
+      "id": 8,
+      "tourId": 4,
+      "departureDatetime": "2026-11-09T07:00:00",
+      "maxCapacity": 20,
+      "status": "SCHEDULED"
+    },
+    {
+      "id": 9,
+      "tourId": 5,
+      "departureDatetime": "2026-10-01T08:00:00",
+      "maxCapacity": 15,
+      "status": "IN_PROGRESS"
+    },
+    {
+      "id": 10,
+      "tourId": 5,
+      "departureDatetime": "2026-11-10T07:00:00",
+      "maxCapacity": 10,
+      "status": "SCHEDULED"
+    },
+    {
+      "id": 11,
+      "tourId": 6,
+      "departureDatetime": "2026-10-09T07:00:00",
+      "maxCapacity": 15,
+      "status": "SCHEDULED"
+    },
+    {
+      "id": 12,
+      "tourId": 6,
+      "departureDatetime": "2026-11-11T07:00:00",
+      "maxCapacity": 12,
+      "status": "SCHEDULED"
+    },
+    {
+      "id": 13,
+      "tourId": 7,
+      "departureDatetime": "2026-10-10T07:00:00",
+      "maxCapacity": 10,
+      "status": "SCHEDULED"
+    },
+    {
+      "id": 14,
+      "tourId": 7,
+      "departureDatetime": "2026-11-12T07:00:00",
+      "maxCapacity": 10,
+      "status": "SCHEDULED"
+    },
+    {
+      "id": 15,
+      "tourId": 8,
+      "departureDatetime": "2026-10-11T07:00:00",
+      "maxCapacity": 12,
+      "status": "SCHEDULED"
+    },
+    {
+      "id": 16,
+      "tourId": 8,
+      "departureDatetime": "2026-11-13T07:00:00",
+      "maxCapacity": 12,
+      "status": "SCHEDULED"
+    }
+  ],
+  "participants": [
+    {
+      "id": 3,
+      "tourScheduleId": 2,
+      "userId": 14,
+      "joinedAt": "2026-09-02T13:30:00"
+    },
+    {
+      "id": 4,
+      "tourScheduleId": 2,
+      "userId": 10,
+      "joinedAt": "2026-09-05T08:15:00"
+    },
+    {
+      "id": 5,
+      "tourScheduleId": 3,
+      "userId": 9,
+      "joinedAt": "2026-09-21T11:00:00"
+    },
+    {
+      "id": 6,
+      "tourScheduleId": 3,
+      "userId": 13,
+      "joinedAt": "2026-09-27T13:45:00"
+    },
+    {
+      "id": 7,
+      "tourScheduleId": 3,
+      "userId": 14,
+      "joinedAt": "2026-09-22T13:15:00"
+    },
+    {
+      "id": 8,
+      "tourScheduleId": 4,
+      "userId": 13,
+      "joinedAt": "2026-09-26T15:45:00"
+    },
+    {
+      "id": 9,
+      "tourScheduleId": 4,
+      "userId": 9,
+      "joinedAt": "2026-09-03T14:00:00"
+    },
+    {
+      "id": 10,
+      "tourScheduleId": 4,
+      "userId": 10,
+      "joinedAt": "2026-09-26T14:15:00"
+    },
+    {
+      "id": 11,
+      "tourScheduleId": 4,
+      "userId": 15,
+      "joinedAt": "2026-09-21T16:00:00"
+    },
+    {
+      "id": 12,
+      "tourScheduleId": 5,
+      "userId": 11,
+      "joinedAt": "2026-09-14T12:30:00"
+    },
+    {
+      "id": 13,
+      "tourScheduleId": 5,
+      "userId": 12,
+      "joinedAt": "2026-09-14T08:30:00"
+    },
+    {
+      "id": 14,
+      "tourScheduleId": 5,
+      "userId": 14,
+      "joinedAt": "2026-09-24T17:30:00"
+    },
+    {
+      "id": 15,
+      "tourScheduleId": 5,
+      "userId": 16,
+      "joinedAt": "2026-09-14T14:00:00"
+    },
+    {
+      "id": 16,
+      "tourScheduleId": 6,
+      "userId": 12,
+      "joinedAt": "2026-09-13T11:00:00"
+    },
+    {
+      "id": 17,
+      "tourScheduleId": 6,
+      "userId": 16,
+      "joinedAt": "2026-09-14T10:45:00"
+    },
+    {
+      "id": 18,
+      "tourScheduleId": 6,
+      "userId": 14,
+      "joinedAt": "2026-09-04T09:45:00"
+    },
+    {
+      "id": 19,
+      "tourScheduleId": 7,
+      "userId": 14,
+      "joinedAt": "2026-09-01T08:15:00"
+    },
+    {
+      "id": 20,
+      "tourScheduleId": 7,
+      "userId": 12,
+      "joinedAt": "2026-09-21T20:45:00"
+    },
+    {
+      "id": 21,
+      "tourScheduleId": 7,
+      "userId": 10,
+      "joinedAt": "2026-09-03T17:30:00"
+    },
+    {
+      "id": 23,
+      "tourScheduleId": 8,
+      "userId": 14,
+      "joinedAt": "2026-09-06T16:15:00"
+    },
+    {
+      "id": 24,
+      "tourScheduleId": 8,
+      "userId": 11,
+      "joinedAt": "2026-09-03T09:45:00"
+    },
+    {
+      "id": 25,
+      "tourScheduleId": 9,
+      "userId": 12,
+      "joinedAt": "2026-09-27T08:45:00"
+    },
+    {
+      "id": 26,
+      "tourScheduleId": 9,
+      "userId": 11,
+      "joinedAt": "2026-09-11T08:45:00"
+    },
+    {
+      "id": 27,
+      "tourScheduleId": 9,
+      "userId": 10,
+      "joinedAt": "2026-09-03T19:15:00"
+    },
+    {
+      "id": 28,
+      "tourScheduleId": 10,
+      "userId": 12,
+      "joinedAt": "2026-09-28T11:45:00"
+    },
+    {
+      "id": 29,
+      "tourScheduleId": 10,
+      "userId": 13,
+      "joinedAt": "2026-09-06T17:15:00"
+    },
+    {
+      "id": 30,
+      "tourScheduleId": 10,
+      "userId": 16,
+      "joinedAt": "2026-09-02T14:15:00"
+    },
+    {
+      "id": 31,
+      "tourScheduleId": 10,
+      "userId": 15,
+      "joinedAt": "2026-09-13T13:00:00"
+    },
+    {
+      "id": 32,
+      "tourScheduleId": 11,
+      "userId": 12,
+      "joinedAt": "2026-09-27T11:00:00"
+    },
+    {
+      "id": 33,
+      "tourScheduleId": 11,
+      "userId": 14,
+      "joinedAt": "2026-09-18T20:00:00"
+    },
+    {
+      "id": 34,
+      "tourScheduleId": 12,
+      "userId": 14,
+      "joinedAt": "2026-09-15T16:30:00"
+    },
+    {
+      "id": 35,
+      "tourScheduleId": 12,
+      "userId": 9,
+      "joinedAt": "2026-09-21T14:30:00"
+    },
+    {
+      "id": 36,
+      "tourScheduleId": 12,
+      "userId": 12,
+      "joinedAt": "2026-09-19T11:45:00"
+    },
+    {
+      "id": 37,
+      "tourScheduleId": 12,
+      "userId": 13,
+      "joinedAt": "2026-09-13T18:30:00"
+    },
+    {
+      "id": 38,
+      "tourScheduleId": 13,
+      "userId": 16,
+      "joinedAt": "2026-09-01T17:45:00"
+    },
+    {
+      "id": 39,
+      "tourScheduleId": 13,
+      "userId": 10,
+      "joinedAt": "2026-09-15T11:45:00"
+    },
+    {
+      "id": 40,
+      "tourScheduleId": 13,
+      "userId": 9,
+      "joinedAt": "2026-09-25T17:45:00"
+    },
+    {
+      "id": 41,
+      "tourScheduleId": 14,
+      "userId": 16,
+      "joinedAt": "2026-09-04T09:15:00"
+    },
+    {
+      "id": 42,
+      "tourScheduleId": 14,
+      "userId": 12,
+      "joinedAt": "2026-09-12T14:30:00"
+    },
+    {
+      "id": 43,
+      "tourScheduleId": 15,
+      "userId": 16,
+      "joinedAt": "2026-09-17T18:00:00"
+    },
+    {
+      "id": 44,
+      "tourScheduleId": 15,
+      "userId": 13,
+      "joinedAt": "2026-09-02T18:15:00"
+    },
+    {
+      "id": 45,
+      "tourScheduleId": 16,
+      "userId": 14,
+      "joinedAt": "2026-09-24T16:00:00"
+    },
+    {
+      "id": 46,
+      "tourScheduleId": 16,
+      "userId": 15,
+      "joinedAt": "2026-09-02T20:45:00"
+    },
+    {
+      "id": 47,
+      "userId": 13,
+      "joinedAt": "2026-10-05T04:30:32.368Z",
+      "tourScheduleId": 7
+    },
+    {
+      "id": 48,
+      "userId": 9,
+      "joinedAt": "2026-10-05T04:30:45.888Z",
+      "tourScheduleId": 1
+    },
+    {
+      "id": 49,
+      "userId": 16,
+      "joinedAt": "2026-10-05T04:32:35.888Z",
+      "tourScheduleId": 1
+    },
+    {
+      "id": 50,
+      "userId": 11,
+      "joinedAt": "2026-10-05T04:33:01.489Z",
+      "tourScheduleId": 1
+    }
+  ],
+  "active_tours": [
+    {
+      "id": 1,
+      "tourScheduleId": 1,
+      "guideId": 1,
+      "status": "IN_PROGRESS",
+      "currentLatitude": -13.1547,
+      "currentLongitude": -72.5253,
+      "startedAt": "2026-10-01T06:35:00",
+      "finishedAt": null
+    },
+    {
+      "id": 2,
+      "tourScheduleId": 7,
+      "guideId": 4,
+      "status": "IN_PROGRESS",
+      "currentLatitude": -15.637,
+      "currentLongitude": -71.601,
+      "startedAt": "2026-10-01T07:05:00",
+      "finishedAt": null
+    },
+    {
+      "id": 3,
+      "tourScheduleId": 4,
+      "guideId": 2,
+      "status": "FINISHED",
+      "currentLatitude": -12.0462,
+      "currentLongitude": -77.0273,
+      "startedAt": "2026-09-20T07:00:00",
+      "finishedAt": "2026-09-20T11:10:00"
+    },
+    {
+      "tourScheduleId": 3,
+      "guideId": 3,
+      "status": "IN_PROGRESS",
+      "currentLatitude": -13.2486,
+      "currentLongitude": -72.3639,
+      "startedAt": "2026-10-06T04:32:00.000Z",
+      "finishedAt": "",
+      "id": 4
+    }
+  ],
+  "incidents": [
+    {
+      "id": 1,
+      "uuid": "",
+      "activeTourId": 1,
+      "reportedByUserId": 9,
+      "description": "Un participante se torció el tobillo en el sendero.",
+      "latitude": -13.156,
+      "longitude": -72.526,
+      "reportedAt": "2026-10-01T09:20:00",
+      "status": "RESOLVED"
+    },
+    {
+      "id": 2,
+      "uuid": "",
+      "activeTourId": 2,
+      "reportedByUserId": 8,
+      "description": "Retraso por bloqueo en la vía hacia Chivay.",
+      "latitude": -15.7,
+      "longitude": -71.55,
+      "reportedAt": "2026-10-01T08:40:00",
+      "status": "RESOLVED"
+    },
+    {
+      "id": 3,
+      "uuid": "",
+      "activeTourId": 3,
+      "reportedByUserId": 11,
+      "description": "Pérdida de una mochila en la Plaza de Armas.",
+      "latitude": -12.0464,
+      "longitude": -77.03,
+      "reportedAt": "2026-09-20T09:00:00",
+      "status": "RESOLVED"
+    },
+    {
+      "id": 4,
+      "uuid": "",
+      "activeTourId": 4,
+      "reportedByUserId": 6,
+      "description": "Lluvia ligera, se ajustó el recorrido.",
+      "latitude": -12.0462,
+      "longitude": -77.0305,
+      "reportedAt": "2026-09-20T09:45:00",
+      "status": "RESOLVED"
+    }
+  ],
+  "plans": [
+    {
+      "id": 1,
+      "name": "Básico",
+      "priceAmount": 29,
+      "priceCurrency": "USD"
+    },
+    {
+      "id": 2,
+      "name": "Profesional",
+      "priceAmount": 79,
+      "priceCurrency": "USD"
+    },
+    {
+      "id": 3,
+      "name": "Empresarial",
+      "priceAmount": 149,
+      "priceCurrency": "USD"
+    }
+  ],
+  "plan_features": [
+    {
+      "id": 1,
+      "planId": 1,
+      "description": "Tours activos",
+      "value": "Hasta 5"
+    },
+    {
+      "id": 2,
+      "planId": 1,
+      "description": "Guías registrados",
+      "value": "Hasta 3"
+    },
+    {
+      "id": 3,
+      "planId": 1,
+      "description": "Soporte",
+      "value": "Correo electrónico"
+    },
+    {
+      "id": 4,
+      "planId": 2,
+      "description": "Tours activos",
+      "value": "Hasta 20"
+    },
+    {
+      "id": 5,
+      "planId": 2,
+      "description": "Guías registrados",
+      "value": "Hasta 10"
+    },
+    {
+      "id": 6,
+      "planId": 2,
+      "description": "Monitoreo en tiempo real",
+      "value": "Incluido"
+    },
+    {
+      "id": 7,
+      "planId": 3,
+      "description": "Tours activos",
+      "value": "Ilimitados"
+    },
+    {
+      "id": 8,
+      "planId": 3,
+      "description": "Guías registrados",
+      "value": "Ilimitados"
+    },
+    {
+      "id": 9,
+      "planId": 3,
+      "description": "Soporte",
+      "value": "Prioritario 24/7"
+    }
+  ],
+  "subscriptions": [
+    {
+      "id": 1,
+      "agencyId": 1,
+      "planId": 2,
+      "status": "ACTIVE",
+      "activatedAt": "2026-08-01T10:00:00"
+    },
+    {
+      "id": 2,
+      "agencyId": 2,
+      "planId": 1,
+      "status": "ACTIVE",
+      "activatedAt": "2026-08-15T09:30:00"
+    },
+    {
+      "id": 3,
+      "agencyId": 3,
+      "planId": 3,
+      "status": "PENDING",
+      "activatedAt": null
+    }
+  ],
+  "payments": [
+    {
+      "id": 1,
+      "agencyId": 1,
+      "planId": 2,
+      "amount": 79,
+      "currency": "USD",
+      "status": "PAID",
+      "requestedAt": "2026-08-01T09:55:00"
+    },
+    {
+      "id": 2,
+      "agencyId": 2,
+      "planId": 1,
+      "amount": 29,
+      "currency": "USD",
+      "status": "PAID",
+      "requestedAt": "2026-08-15T09:20:00"
+    },
+    {
+      "id": 3,
+      "agencyId": 3,
+      "planId": 3,
+      "amount": 149,
+      "currency": "USD",
+      "status": "PENDING",
+      "requestedAt": "2026-09-28T16:00:00"
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "userId": 9,
+      "tourId": 1,
+      "rating": 5,
+      "createdAt": "2026-09-11T18:00:00"
+    },
+    {
+      "id": 2,
+      "userId": 10,
+      "tourId": 1,
+      "rating": 4,
+      "createdAt": "2026-09-12T18:00:00"
+    },
+    {
+      "id": 3,
+      "userId": 11,
+      "tourId": 2,
+      "rating": 5,
+      "createdAt": "2026-09-13T18:00:00"
+    },
+    {
+      "id": 4,
+      "userId": 12,
+      "tourId": 3,
+      "rating": 4,
+      "createdAt": "2026-09-14T18:00:00"
+    },
+    {
+      "id": 5,
+      "userId": 13,
+      "tourId": 4,
+      "rating": 5,
+      "createdAt": "2026-09-15T18:00:00"
+    },
+    {
+      "id": 6,
+      "userId": 14,
+      "tourId": 5,
+      "rating": 5,
+      "createdAt": "2026-09-16T18:00:00"
+    },
+    {
+      "id": 7,
+      "userId": 15,
+      "tourId": 6,
+      "rating": 3,
+      "createdAt": "2026-09-17T18:00:00"
+    },
+    {
+      "id": 8,
+      "userId": 16,
+      "tourId": 7,
+      "rating": 5,
+      "createdAt": "2026-10-05T23:15:05.791Z"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "reviewId": 1,
+      "content": "Machu Picchu increíble.",
+      "createdAt": "2026-09-11T18:05:00"
+    },
+    {
+      "id": 2,
+      "reviewId": 2,
+      "content": "Muy buena organización.",
+      "createdAt": "2026-09-12T18:05:00"
+    },
+    {
+      "id": 3,
+      "reviewId": 3,
+      "content": "Experiencia inolvidable.",
+      "createdAt": "2026-09-13T18:05:00"
+    },
+    {
+      "id": 4,
+      "reviewId": 4,
+      "content": "Buen recorrido, algo apurado.",
+      "createdAt": "2026-09-14T18:05:00"
+    },
+    {
+      "id": 5,
+      "reviewId": 5,
+      "content": "Guía muy conocedora.",
+      "createdAt": "2026-09-15T18:05:00"
+    },
+    {
+      "id": 6,
+      "reviewId": 6,
+      "content": "Lo mejor de la comida peruana.",
+      "createdAt": "2026-09-16T18:05:00"
+    },
+    {
+      "id": 7,
+      "reviewId": 7,
+      "content": "Bonito pero hubo mucha gente.",
+      "createdAt": "2026-09-17T18:05:00"
+    },
+    {
+      "id": 8,
+      "reviewId": 8,
+      "content": "El Colca es espectacular.",
+      "createdAt": "2026-10-05T23:15:05.791Z"
+    },
+    {
+      "content": "Arequipa hace mucho calor",
+      "createdAt": "2026-10-06T21:53:00.333Z",
+      "id": 10
+    }
+  ]
+}
