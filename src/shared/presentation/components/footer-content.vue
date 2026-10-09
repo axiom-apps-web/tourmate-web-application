@@ -5,10 +5,27 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <footer class="absolute bottom-0 left-0 w-full border-none bg-primary mt-4 border-round-md shadow-1 p-3">
-    <div class="flex flex-column align-items-center justify-content-center gap-2 text-center text-white">
-      <p class="m-0 text-sm font-medium">Copyright &copy; 2026. TOURMATE`</p>
-
-    </div>
+  <footer class="app-footer">
+    <p>Copyright &copy; 2026 TourMate</p>
   </footer>
 </template>
+
+<style scoped>
+.app-footer {
+  display: flex;
+  min-height: 4rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  padding: 1rem;
+  border-top: 1px solid var(--tm-border);
+  background: var(--tm-surface);
+  color: var(--tm-muted);
+  text-align: center;
+}
+
+.app-footer p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+</style>
