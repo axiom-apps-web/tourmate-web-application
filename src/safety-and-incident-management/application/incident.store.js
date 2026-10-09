@@ -60,8 +60,7 @@ export const useIncidentStore = defineStore('incident', () => {
      * @returns {Incident|undefined} Matching incident, if available.
      */
     function getIncidentById(id) {
-        let idNum = parseInt(id);
-        return incidents.value.find(incident => incident.id === idNum);
+        return incidents.value.find(incident => String(incident.id) === String(id));
     }
 
     /**
@@ -92,7 +91,7 @@ export const useIncidentStore = defineStore('incident', () => {
             const response = await incidentApi.updateIncident(incident)
             const resource = response.data;
             const updatedIncident = IncidentAssembler.toEntityFromResource(resource);
-            const index = incidents.value.findIndex(i => i.id === updatedIncident.id);
+            const index = incidents.value.findIndex(i => String(i.id) === String(updatedIncident.id));
             if (index !== -1) incidents.value[index] = updatedIncident;
             return true;
         } catch (error) {
@@ -120,7 +119,7 @@ export const useIncidentStore = defineStore('incident', () => {
     async function deleteIncident(incident) {
         try {
             await incidentApi.deleteIncident(incident.id)
-            const index = incidents.value.findIndex(i => i.id === incident.id);
+            const index = incidents.value.findIndex(i => String(i.id) === String(incident.id));
             if (index !== -1) incidents.value.splice(index, 1);
             return true;
         } catch (error) {

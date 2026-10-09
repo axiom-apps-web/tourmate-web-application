@@ -55,7 +55,7 @@ async function saveIncident() {
       !Number.isFinite(longitude) || longitude < -180 || longitude > 180) return;
 
   const incident = new Incident({
-    id: isEdit.value ? Number(route.params.id) : null,
+    id: isEdit.value ? route.params.id : null,
     ...form.value,
     activeTourId: Number(form.value.activeTourId),
     reportedByUserId: Number(form.value.reportedByUserId),
