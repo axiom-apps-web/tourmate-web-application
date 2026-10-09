@@ -22,15 +22,7 @@ export class TourGuideAssembler {
      * @param {TourGuide} entity TourGuide entity.
      * @returns {Object} TourGuide resource payload.
      */
-    static toResourceFromEntity(entity) {
-        return {
-            id: entity.id,
-            userId: entity.userId,
-            agencyId: entity.agencyId,
-            languages: entity.languages,
-            phoneNumber: entity.phoneNumber,
-        };
-    }
+
 
     /**
      * Parses tour guide resources from a response and maps them into entities.

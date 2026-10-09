@@ -11,8 +11,13 @@ import {ActiveTourAssembler} from "../infrastructure/active-tour.assembler.js";
 import {ParticipantAssembler} from "../infrastructure/participant.assembler.js";
 import {ActiveTour} from "../domain/model/active-tour.entity.js";
 import {Participant} from "../domain/model/participant.entity.js";
+import {TourManagementApi} from "../../tour-management/infrastructure/tour-management-api.js";
+import {IamApi} from "../../iam/infrastructure/iam-api.js";
+import {TourGuideAssembler} from "../../iam/infrastructure/tour-guide.assembler.js";
 
 const tourMonitoringApi = new TourMonitoringApi();
+const tourManagementApi = new TourManagementApi();
+const iamApi = new IamApi();
 
 /**
  * Reactive store that exposes TourMonitoring commands and queries.
@@ -30,6 +35,8 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * @type {import('vue').Ref<Participant[]>}
      */
     const participants = ref([]);
+
+    const guides = ref([]);
     /**
      * List of errors encountered during API operations.
      * @type {import('vue').Ref<Error[]>}
@@ -49,6 +56,9 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * Number of loaded activeTours.
      * @type {import('vue').ComputedRef<number>}
      */
+
+    const guidesLoaded = ref(false);
+
     const activeToursCount = computed(() => {
         return activeToursLoaded ? activeTours.value.length : 0;
     });
@@ -88,6 +98,15 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
         });
     }
 
+    function fetchGuides() {
+        iamApi.getTourGuides().then(response => {
+            guides.value = TourGuideAssembler.toEntitiesFromResponse(response);
+            guidesLoaded.value = true;
+        }).catch(error => {
+            errors.value.push(error);
+        });
+    }
+    
     /**
      * Finds a activeTour entity by identifier.
      * @param {number|string} id - ActiveTour identifier.
@@ -202,12 +221,14 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
     return {
         activeTours,
         participants,
+        guides,
         errors,
         activeToursLoaded,
         participantsLoaded,
         activeToursCount,
         participantsCount,
         fetchActiveTours,
+        fetchGuides,
         fetchParticipants,
         getActiveTourById,
         addActiveTour,

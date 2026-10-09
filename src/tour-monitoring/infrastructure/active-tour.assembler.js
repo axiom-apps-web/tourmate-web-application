@@ -36,16 +36,5 @@ export class ActiveTourAssembler {
      * @param {ActiveTour} entity - ActiveTour entity.
      * @returns {Object} Resource payload.
      */
-    static toResourceFromEntity(entity) {
-        return {
-            id: entity.id,
-            tourScheduleId: entity.tourScheduleId,
-            guideId: entity.guideId,
-            status: entity.status,
-            currentLatitude: entity.currentLatitude,
-            currentLongitude: entity.currentLongitude,
-            startedAt: entity.startedAt,
-            finishedAt: entity.finishedAt
-        };
-    }
+
 }

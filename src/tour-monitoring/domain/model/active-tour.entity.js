@@ -1,5 +1,3 @@
-//import { TourSchedule } from "./tour-schedule.entity.js";
-
 
 import {TourGuide} from "../../../iam/domain/model/tour-guide.entity.js";
 import {TourSchedule} from "../../../tour-management/domain/model/tour-schedule.entity.js";
@@ -21,8 +19,8 @@ export class ActiveTour {
      * @param {?number} [params.currentLongitude=null] - Latest reported longitude.
      * @param {string} [params.startedAt=''] - Start date/time of the tour.
      * @param {?string} [params.finishedAt=null] - End date/time of the tour, null while in progress.
-     * @param {?TourSchedule} [params.tourSchedule=null] - Optional tour schedule entity reference.
-     * @param {?TourGuide} [params.guide=null] - Optional guide entity reference.
+     * @param {TourSchedule} [params.tourSchedule=null] - Optional tour schedule entity reference.
+     * @param {TourGuide} [params.guide=null] - Optional guide entity reference.
      */
     constructor({
                     id = null,

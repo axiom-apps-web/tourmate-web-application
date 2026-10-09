@@ -1,4 +1,5 @@
 import {User} from "../../../iam/domain/model/user.entity.js";
+import {TourSchedule} from "../../../tour-management/domain/model/tour-schedule.entity.js";
 
 
 /**
@@ -14,8 +15,8 @@ export class Participant {
      * @param {?number} [params.userId=null] - Foreign key of the related user.
      * @param {string} [params.joinedAt=''] - Date/time when the participant joined the tour.
      * @param {?number} [params.tourScheduleId=null] - Foreign key of the related tour schedule.
-     * @param {?TourSchedule} [params.tourSchedule=null] - Optional tour schedule entity reference.
-     * @param {?User} [params.user=null] - Optional user entity reference.
+     * @param {TourSchedule} [params.tourSchedule=null] - Optional tour schedule entity reference.
+     * @param {User} [params.user=null] - Optional user entity reference.
      */
     constructor({
                     id = null,

@@ -142,7 +142,9 @@
     "delete": "Eliminar tour activo",
     "delete_confirm": "¿Eliminar este tour activo? Esta acción no se puede deshacer.",
     "view": "Ver en vivo",
-    "tourTitle": "Nombre del Tour"
+    "tourTitle": "Nombre del Tour",
+    "cancel": "Cancelar",
+    "save": "Guardar"
   },
   "activeTour": {
     "form-description": "Vincula la expedición activa con su horario y guía, y registra su estado y ubicación.",

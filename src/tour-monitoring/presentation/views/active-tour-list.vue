@@ -3,27 +3,35 @@ import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
 import {useConfirm} from "primevue";
 import useTourMonitoringStore from "../../application/tour-monitoring.store.js";
+import useIamStore from "../../../iam/application/iam.store.js";
 import {onMounted, toRefs} from "vue";
 
 const { t } = useI18n();
 const router = useRouter();
 const confirm = useConfirm();
 const store = useTourMonitoringStore();
+const iamStore = useIamStore();
 const { activeTours, activeToursLoaded, errors} = toRefs(store);
 const { fetchActiveTours, deleteActiveTour } = store;
 
 onMounted(() => {
+  if (!iamStore.tourGuidesLoaded) {
+    iamStore.fetchTourGuides();
+  }
   if (!store.activeToursLoaded) {
     fetchActiveTours();
     activeToursLoaded.value = store.activeToursLoaded;
   }
 });
 
+const getGuidePhoneNumber = (guideId) =>
+    iamStore.getTourGuideById(guideId)?.phoneNumber || '—';
+
 /**
  * Navigate to the new activeTour creation page.
  */
 const navigateToNew = () => {
-  router.push({ name: 'tourMonitoring-activeTour-new' });
+  router.push({ name: 'tour-monitoring-active-tour-new' });
 };
 
 /**
@@ -31,8 +39,7 @@ const navigateToNew = () => {
  * @param {number} id - The ID of the activeTour to edit.
  */
 const navigateToEdit = (id) => {
-  console.log(id);
-  router.push({ name: 'tourMonitoring-activeTour-edit', params: { id } });
+  router.push({ name: 'tour-monitoring-active-tour-edit', params: { id } });
 };
 
 /**
@@ -65,7 +72,11 @@ const confirmDelete = (activeTour) => {
       <pv-column field="id" :header="t('activeTours.id')" sortable />
       <pv-column field="status" :header="t('activeTours.status')" sortable />
       <pv-column field="startedAt" :header="t('activeTour.startedAt')" />
-      <pv-column field="guideId" :header="t('activeTour.guideId')" />>
+      <pv-column header="Phone number">
+        <template #body="slotProps">
+          {{ getGuidePhoneNumber(slotProps.data.guideId) }}
+        </template>
+      </pv-column>
       <pv-column :header="t('activeTours.actions')">
         <template #body="slotProps">
           <pv-button icon="pi pi-pencil" text rounded @click="navigateToEdit(slotProps.data.id)" />
