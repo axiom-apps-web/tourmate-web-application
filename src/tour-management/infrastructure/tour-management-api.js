@@ -3,6 +3,7 @@ import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
 
 const toursEndpointPath = import.meta.env.VITE_TOURS_ENDPOINT_PATH
 const tourSchedulesEndpointPath = import.meta.env.VITE_TOUR_SCHEDULES_ENDPOINT_PATH
+const checkpointsEndpointPath = import.meta.env.VITE_CHECKPOINTS_ENDPOINT_PATH || '/checkpoints'
 
 /**
  *
@@ -23,12 +24,14 @@ export class TourManagementApi extends BaseApi {
      * @private
      */
     #tourSchedulesEndpoint
+    #checkpointsEndpoint
 
 
     constructor() {
         super();
         this.#toursEndpoint = new BaseEndpoint(this, toursEndpointPath);
         this.#tourSchedulesEndpoint = new BaseEndpoint(this, tourSchedulesEndpointPath);
+        this.#checkpointsEndpoint = new BaseEndpoint(this, checkpointsEndpointPath);
     }
 
     getTours() {
@@ -53,6 +56,10 @@ export class TourManagementApi extends BaseApi {
 
     getTourSchedules() {
         return this.#tourSchedulesEndpoint.getAll()
+    }
+
+    getCheckpoints() {
+        return this.#checkpointsEndpoint.getAll()
     }
 
     getTourScheduleById(id) {

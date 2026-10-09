@@ -1,19 +1,31 @@
 <script setup>
-import { computed, ref } from "vue";
-import { Tour } from "../../domain/model/tour.entity.js";
+import {Tour} from "../../domain/model/tour.entity.js";
+import {computed, ref} from "vue";
+import {useI18n} from "vue-i18n";
+import {Button as PvButton, Card as PvCard, Menu as PvMenu, Tag as PvTag} from "primevue";
 
 const props = defineProps({
   tour: { type: Tour, required: true },
 });
 
-const emit = defineEmits(["edit", "delete"]);
+const emit = defineEmits(['edit', 'delete']);
 
+const {t} = useI18n();
 const menu = ref();
 const toggleMenu = (event) => menu.value.toggle(event);
 
 const menuItems = computed(() => [
-  { label: "Edit", icon: "pi pi-pencil", command: () => emit("edit", props.tour) },
-  { label: "Delete", icon: "pi pi-trash", danger: true, command: () => emit("delete", props.tour) },
+  {
+    label: t('tours.edit'),
+    icon: 'pi pi-pencil',
+    command: () => emit('edit', props.tour)
+  },
+  {
+    label: t('tours.delete'),
+    icon: 'pi pi-trash',
+    danger: true,
+    command: () => emit('delete', props.tour)
+  }
 ]);
 
 const menuTokens = {
@@ -41,132 +53,149 @@ const menuTokens = {
 </script>
 
 <template>
-  <pv-card class="tour-card w-full">
-    <template #title>
-      <div class="flex align-items-start justify-content-between gap-2">
-        <h3 class="tour-card-title m-0">{{ tour.title }}</h3>
+  <article class="tour-item surface-card" :aria-labelledby="`tour-title-${tour.id}`">
+    <header class="tour-item__header">
+      <span class="tour-item__badge"><i class="pi pi-map-marker" aria-hidden="true"></i>{{ tour.duration }}</span>
+      <pv-button
+          icon="pi pi-ellipsis-h"
+          text
+          rounded
+          severity="secondary"
+          :aria-label="`${t('tours.actions')}: ${tour.title}`"
+          :aria-haspopup="true"
+          @click="toggleMenu"
+      />
+      <pv-menu ref="menu" :model="menuItems" popup>
+        <template #item="{item, props: itemProps}">
+          <a v-bind="itemProps.action" :class="['tour-menu-item', {'tour-menu-item--danger': item.danger}]">
+            <i :class="item.icon" aria-hidden="true"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        </template>
+      </pv-menu>
+    </header>
 
-        <pv-button
-            class="tour-card-more"
-            icon="pi pi-ellipsis-h"
-            text
-            rounded
-            severity="secondary"
-            aria-label="Tour actions"
-            aria-haspopup="true"
-            @click="toggleMenu"
-        />
-        <pv-menu ref="menu" :model="menuItems" popup :dt="menuTokens">
-          <template #item="{ item, props: itemProps }">
-            <a v-bind="itemProps.action" :class="{ 'tour-menu-danger' : item.danger }">
-              <span :class="item.icon" />
-              <span class="ml-2">{{ item.label }}</span>
-            </a>
-          </template>
-        </pv-menu>
+    <div class="tour-item__content">
+      <h2 :id="`tour-title-${tour.id}`">{{ tour.title }}</h2>
+      <p class="tour-item__description">{{ tour.description }}</p>
+      <div class="tour-item__tags" :aria-label="t('tours.difficulty')">
+        <span class="tour-tag">{{ tour.difficulty }}</span>
+        <span class="tour-tag tour-tag--muted">{{ t('tours.agency_id') }} · {{ tour.agencyId }}</span>
       </div>
-    </template>
+    </div>
 
-    <template #content>
-      <p class="tour-card-description mt-0 mb-3">
-        {{ tour.description }}
-      </p>
-
-      <div class="flex flex-wrap gap-2">
-        <span class="tour-tag tour-tag--green">
-          {{ tour.duration }}
-        </span>
-        <span class="tour-tag tour-tag--amber">
-          {{ tour.difficulty }}
-        </span>
-        <span class="tour-tag tour-tag--violet">
-          {{ tour.agencyId }}
-        </span>
+    <footer class="tour-item__footer">
+      <div>
+        <span>{{ t('tours.price') }}</span>
+        <strong>{{ tour.priceAmount }} {{ tour.priceCurrency }}</strong>
       </div>
-    </template>
-
-    <template #footer>
-      <pv-divider />
-      <div class="tour-card-footer flex align-items-end justify-content-between">
-        <div class="flex flex-column gap-1">
-          <span class="tour-card-label">Duration</span>
-          <strong class="tour-card-value" >{{ tour.duration }}</strong>
-        </div>
-        <div class="flex flex-column align-items-end gap-1">
-          <span class="tour-card-label">Price</span>
-          <strong class="tour-card-price">${{ tour.priceAmount }} {{ tour.priceCurrency }}</strong>
-        </div>
+      <div>
+        <span>{{ t('tours.status') }}</span>
+        <strong>{{ tour.status }}</strong>
       </div>
-    </template>
-  </pv-card>
+    </footer>
+  </article>
 </template>
 
 <style scoped>
-
-.tour-card {
-  background: white;
-  border-radius: 1.25rem;
-  box-shadow: 0 1px 3px rgba(20, 40, 35, 0.08), 0 8px 24px rgba(20, 40, 35, 0.08);
+.tour-item {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 1.25rem;
+  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
 }
 
-.tour-card :deep(.p-card-body) {
-  padding: 1.5rem;
-  gap: 0;
-}
-.tour-card :deep(.p-card-title) {
-  font-size: inherit;
-  font-weight: inherit;
+.tour-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--tm-green-700);
+  box-shadow: 0 0.8rem 1.8rem rgb(19 53 31 / 12%);
 }
 
-.tour-card-title {
-  font-size: 1.35rem;
-  line-height: 1.25;
-  font-weight: 700;
-  color: #14302c;
+.tour-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
-.tour-card-more {
-  flex-shrink: 0;
-  width: 2rem;
-  height: 2rem;
-  color: #8a9794;
-}
-
-.tour-card-description {
-  margin-top: 0.6rem;
-  font-size: 0.95rem;
-  line-height: 1.45;
-  color: #6b7a77;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
+.tour-item__badge,
 .tour-tag {
-  padding: 0.3rem 0.8rem;
+  display: inline-flex;
+  min-height: 1.8rem;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
   border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  background: var(--tm-green-100);
+  color: var(--tm-green-900);
+  font-size: 0.78rem;
+  font-weight: 650;
 }
 
-.tour-tag--green  { background: #e6f2ee; color: #2d6a58; }
-.tour-tag--amber  { background: #f6ebdd; color: #9a6a2f; }
-.tour-tag--violet { background: #ececf5; color: #5b5f86; }
-
-.tour-card-footer {
-  margin-top: 1.5rem;
-  padding-top: 1.1rem;
+.tour-item__content {
+  flex: 1;
+  padding-block: 0.75rem 1.15rem;
 }
 
-.tour-card-label { font-size: 0.8rem; color: #8a9794; }
-.tour-card-value { font-size: 0.95rem; color: #14302c; }
-.tour-card-price { font-size: 1.35rem; color: #14302c; }
+.tour-item__content h2 {
+  margin: 0;
+  color: var(--tm-text);
+  font-size: 1.2rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
 
-</style>
+.tour-item__description {
+  display: -webkit-box;
+  min-height: 3.2rem;
+  margin: 0.65rem 0 1rem;
+  overflow: hidden;
+  color: var(--tm-muted);
+  line-height: 1.6;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
 
-<style>
-.tour-menu-danger,
-.tour-menu-danger .pi {
-  color: #c0252b !important;
+.tour-item__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tour-tag--muted {
+  background: transparent;
+  border: 1px solid var(--tm-border);
+  color: var(--tm-muted);
+}
+
+.tour-item__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--tm-border);
+}
+
+.tour-item__footer div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.tour-item__footer div:last-child {
+  text-align: right;
+}
+
+.tour-item__footer span {
+  color: var(--tm-muted);
+  font-size: 0.78rem;
+}
+
+.tour-item__footer strong {
+  color: var(--tm-text);
+}
+
+:deep(.p-menu-item-content .tour-menu-item--danger) {
+  color: var(--tm-danger);
 }
 </style>

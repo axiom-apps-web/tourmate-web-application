@@ -1,14 +1,57 @@
 
 :root {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: Montserrat, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #1f2937;
-  background-color: #ffffff;
+  color-scheme: light;
+  --tm-heading-font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --tm-green-950: #123f2d;
+  --tm-green-900: #1b5e3f;
+  --tm-green-800: #347c59;
+  --tm-green-700: #4caf7a;
+  --tm-green-100: #e8f3ec;
+  --tm-green-50: #f4f8f5;
+  --tm-accent: #f59e0b;
+  --tm-action-bg: #f59e0b;
+  --tm-action-hover: #d88b00;
+  --tm-action-text: #1f2937;
+  --tm-focus: #1b5e3f;
+  --tm-info: #2563eb;
+  --tm-page: #e8f3ec;
+  --tm-surface: #ffffff;
+  --tm-text: #1f2937;
+  --tm-muted: #6b7280;
+  --tm-border: #d3ddd7;
+  --tm-danger: #ef4444;
+  color: var(--tm-text);
+  background-color: var(--tm-page);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --tm-green-950: #e0f1e5;
+    --tm-green-900: #bde3ca;
+    --tm-green-800: #8fcba5;
+    --tm-green-700: #69b883;
+    --tm-green-100: #27452e;
+    --tm-green-50: #1c3322;
+    --tm-action-bg: #f59e0b;
+    --tm-action-hover: #ffb52e;
+    --tm-action-text: #1f2937;
+    --tm-focus: #bde3ca;
+    --tm-info: #93c5fd;
+    --tm-page: #111a13;
+    --tm-surface: #1b281e;
+    --tm-text: #f1f5f1;
+    --tm-muted: #c2cec3;
+    --tm-border: #405346;
+    --tm-danger: #ff8585;
+  }
 }
 
 * {
@@ -16,15 +59,15 @@
 }
 
 html,
-body,
-#app {
+body {
   min-height: 100%;
-  height: 100%;
 }
 
 body {
   margin: 0;
   min-width: 320px;
+  color: var(--tm-text);
+  background: var(--tm-page);
 }
 
 button,
@@ -34,9 +77,118 @@ select {
   font: inherit;
 }
 
+button,
+input,
+textarea,
+select,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+textarea,
+select {
+  color: inherit;
+}
+
+button,
+a,
+input,
+textarea,
+select,
+[tabindex]:not([tabindex="-1"]) {
+  touch-action: manipulation;
+}
+
+:focus-visible {
+  outline: 3px solid var(--tm-focus);
+  outline-offset: 3px;
+}
+
+.p-button:not(.p-button-text):not(.p-button-outlined):not(.p-button-secondary):not(.p-button-danger) {
+  border-color: var(--tm-action-bg);
+  background: var(--tm-action-bg);
+  color: var(--tm-action-text);
+}
+
+.p-button:not(.p-button-text):not(.p-button-outlined):not(.p-button-secondary):not(.p-button-danger):hover {
+  border-color: var(--tm-action-hover);
+  background: var(--tm-action-hover);
+  color: var(--tm-action-text);
+}
+
+.p-button.p-button-outlined:not(.p-button-danger) {
+  border-color: var(--tm-green-900);
+  color: var(--tm-green-900);
+}
+
+.p-button.p-button-text:not(.p-button-danger),
+.p-button.p-button-secondary.p-button-text {
+  color: var(--tm-green-900);
+}
+
+.p-selectbutton .p-togglebutton.p-togglebutton-checked {
+  border-color: var(--tm-action-bg);
+  background: var(--tm-action-bg);
+  color: var(--tm-action-text);
+}
+
+.p-selectbutton .p-togglebutton:focus-visible,
+.p-button:focus-visible,
+.p-select:focus-visible,
+.p-inputtext:focus-visible,
+.p-textarea:focus-visible {
+  outline: 3px solid var(--tm-focus);
+  outline-offset: 2px;
+}
+
+.p-drawer,
+.p-menu,
+.p-select-overlay,
+.p-dialog,
+.p-popover {
+  border-color: var(--tm-border);
+  background: var(--tm-surface);
+  color: var(--tm-text);
+}
+
+.p-menu-item-content:hover,
+.p-drawer-close-button:hover {
+  background: var(--tm-green-100);
+}
+
 a {
   color: inherit;
   text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--tm-text);
+  font-family: var(--tm-heading-font);
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.25rem;
+  line-height: 1.35;
 }
 
 img,
@@ -47,4 +199,78 @@ svg {
 
 #app {
   width: 100%;
+  min-height: 100dvh;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.page-shell {
+  width: min(100% - 2rem, 76rem);
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 3rem);
+}
+
+.page-heading {
+  margin: 0;
+  color: var(--tm-text);
+  font-family: var(--tm-heading-font);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+.page-description {
+  max-width: 48rem;
+  margin: 0.75rem 0 0;
+  color: var(--tm-muted);
+  line-height: 1.7;
+}
+
+.surface-card {
+  border: 1px solid var(--tm-border);
+  border-radius: 1.1rem;
+  background: var(--tm-surface);
+  box-shadow: 0 0.5rem 1.6rem rgb(19 53 31 / 7%);
+}
+
+.form-control {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--tm-border);
+  border-radius: 0.55rem;
+  background: var(--tm-surface);
+  color: var(--tm-text);
+}
+
+.form-control::placeholder {
+  color: var(--tm-muted);
+  opacity: 0.85;
+}
+
+.form-control:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -970,6 +970,18 @@
       "startedAt": "2026-10-06T04:32:00.000Z",
       "finishedAt": "",
       "id": 4
+    },
+    {
+      "id": 5,
+      "tourScheduleId": 7,
+      "guideId": 2,
+      "status": "IN_PROGRESS",
+      "currentLatitude": -12.0464,
+      "currentLongitude": -77.03,
+      "startedAt": "2026-10-09T14:39",
+      "finishedAt": null,
+      "tourSchedule": null,
+      "guide": null
     }
   ],
   "incidents": [

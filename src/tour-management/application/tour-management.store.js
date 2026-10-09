@@ -3,6 +3,7 @@ import {defineStore} from "pinia";
 import {ref} from "vue";
 import {TourAssembler} from "../infrastructure/tour.assembler.js";
 import {TourScheduleAssembler} from "../infrastructure/tour-schedule.assembler.js";
+import {CheckpointAssembler} from "../infrastructure/checkpoint.assembler.js";
 
 const tourManagementApi = new TourManagementApi();
 
@@ -15,11 +16,13 @@ const useTourManagementStore = defineStore('tour-management',() => {
 
     const tours = ref([])
     const tourSchedules = ref([])
+    const checkpoints = ref([])
 
     const errors = ref([])
 
     const toursLoaded = ref(false)
     const tourSchedulesLoaded = ref(false)
+    const checkpointsLoaded = ref(false)
 
     function fetchTours() {
         tourManagementApi.getTours().then((response) => {
@@ -34,6 +37,15 @@ const useTourManagementStore = defineStore('tour-management',() => {
         tourManagementApi.getTourSchedules().then((response) => {
             tourSchedules.value = TourScheduleAssembler.toEntitiesFromResponse(response)
             tourSchedulesLoaded.value = true
+        }).catch((error) => {
+            errors.value.push(error)
+        })
+    }
+
+    function fetchCheckpoints() {
+        tourManagementApi.getCheckpoints().then((response) => {
+            checkpoints.value = CheckpointAssembler.toEntitiesFromResponse(response)
+            checkpointsLoaded.value = true
         }).catch((error) => {
             errors.value.push(error)
         })
@@ -112,11 +124,14 @@ const useTourManagementStore = defineStore('tour-management',() => {
     return {
         tours,
         tourSchedules,
+        checkpoints,
         errors,
         toursLoaded,
         tourSchedulesLoaded,
+        checkpointsLoaded,
         fetchTours,
         fetchTourSchedules,
+        fetchCheckpoints,
         getTourById,
         getTourScheduleById,
         addTour,
