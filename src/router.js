@@ -6,11 +6,15 @@ import tourMonitoringRoutes from "./tour-monitoring/presentation/tour-monitoring
 // Define lazy-loaded components for routes
 const about = () => import('./shared/presentation/views/about.vue');
 const pageNotFound = () => import('./shared/presentation/views/page-not-found.vue');
+const monitoringRoutes = tourMonitoringRoutes.map(route => ({
+    ...route,
+    path: `/tour-monitoring/${route.path}`
+}));
 
 const routes = [
     { path: '/home',            name: 'home',       component: Home,        meta: { title: 'Home' } },
     { path: '/about',           name: 'about',      component: about,       meta: { title: 'About' } },
-    { path: '/tour-monitoring', name: 'tour-monitoring', children: tourMonitoringRoutes },
+    ...monitoringRoutes,
     { path: '/',                redirect: '/home' },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: pageNotFound, meta: { title: 'Page Not Found' } }
 ];

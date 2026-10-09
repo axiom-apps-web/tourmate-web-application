@@ -14,6 +14,7 @@ import {Participant} from "../domain/model/participant.entity.js";
 import {TourManagementApi} from "../../tour-management/infrastructure/tour-management-api.js";
 import {IamApi} from "../../iam/infrastructure/iam-api.js";
 import {TourGuideAssembler} from "../../iam/infrastructure/tour-guide.assembler.js";
+import {TourScheduleAssembler} from "../../tour-management/infrastructure/tour-schedule.assembler.js";
 
 const tourMonitoringApi = new TourMonitoringApi();
 const tourManagementApi = new TourManagementApi();
@@ -37,6 +38,8 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
     const participants = ref([]);
 
     const guides = ref([]);
+
+    const tourSchedules = ref([]);
     /**
      * List of errors encountered during API operations.
      * @type {import('vue').Ref<Error[]>}
@@ -58,6 +61,7 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      */
 
     const guidesLoaded = ref(false);
+    const tourSchedulesLoaded = ref(false);
 
     const activeToursCount = computed(() => {
         return activeToursLoaded ? activeTours.value.length : 0;
@@ -68,6 +72,14 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      */
     const participantsCount = computed(() => {
         return participantsLoaded ? participants.value.length : 0;
+    });
+
+    const guidesCount = computed(() => {
+        return guidesLoaded ? guides.value.length : 0;
+    });
+
+    const tourSchedulesCount = computed(() => {
+        return tourSchedulesLoaded ? tourSchedules.value.length : 0;
     });
 
     /**
@@ -102,6 +114,15 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
         iamApi.getTourGuides().then(response => {
             guides.value = TourGuideAssembler.toEntitiesFromResponse(response);
             guidesLoaded.value = true;
+        }).catch(error => {
+            errors.value.push(error);
+        });
+    }
+
+    function fetchTourSchedules() {
+        tourManagementApi.getTourSchedules().then(response => {
+            tourSchedules.value = TourScheduleAssembler.toEntitiesFromResponse(response);
+            tourSchedulesLoaded.value = true;
         }).catch(error => {
             errors.value.push(error);
         });
@@ -221,15 +242,18 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
     return {
         activeTours,
         participants,
-        guides,
+        tourSchedules,
         errors,
         activeToursLoaded,
         participantsLoaded,
+        tourSchedulesLoaded,
         activeToursCount,
         participantsCount,
+        tourSchedulesCount,
         fetchActiveTours,
         fetchGuides,
         fetchParticipants,
+        fetchTourSchedules,
         getActiveTourById,
         addActiveTour,
         updateActiveTour,

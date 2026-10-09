@@ -60,7 +60,7 @@ const navigateBack = () => {
 
 <template>
   <div class="p-4">
-    <h1>{{ isEdit ? t('activeTour.edit-title') : t('activeTour.new-title') }}</h1>
+    <h1>{{ isEdit ? t('activeTours.edit') : t('activeTours.new') }}</h1>
     <form @submit.prevent="saveActiveTour">
       <div class="field mb-3">
         <label for="status">{{ t('activeTour.status') }}</label>
