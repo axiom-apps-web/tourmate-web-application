@@ -1,30 +1,44 @@
 import { BaseApi } from '../../shared/infrastructure/base-api.js';
 import { BaseEndpoint } from '../../shared/infrastructure/base-endpoint.js';
 
-export class SubscriptionApi {
-  constructor() {
-    const baseApi = new BaseApi();
+const plansEndpointPath =
+import.meta.env.VITE_PLANS_ENDPOINT_PATH || '/plans';
 
-    this.plansEndpoint = new BaseEndpoint(baseApi, '/plans');
-    this.subscriptionsEndpoint = new BaseEndpoint(
-      baseApi,
-      '/subscriptions'
-    );
-    this.paymentsEndpoint = new BaseEndpoint(baseApi, '/payments');
-  }
+const subscriptionsEndpointPath =
+import.meta.env.VITE_SUBSCRIPTIONS_ENDPOINT_PATH || '/subscriptions';
 
-  async getPlans() {
-    const response = await this.plansEndpoint.getAll();
-    return response.data;
-  }
+const paymentsEndpointPath =
+import.meta.env.VITE_PAYMENTS_ENDPOINT_PATH || '/payments';
 
-  async getSubscriptions() {
-    const response = await this.subscriptionsEndpoint.getAll();
-    return response.data;
-  }
+/**
 
-  async getPayments() {
-    const response = await this.paymentsEndpoint.getAll();
-    return response.data;
-  }
+* API client of the Subscriptions and Payment Management bounded context.
+  */
+  export class SubscriptionApi extends BaseApi {
+  #plansEndpoint;
+  #subscriptionsEndpoint;
+  #paymentsEndpoint;
+
+constructor() {
+super();
+```
+this.#plansEndpoint = new BaseEndpoint(this, plansEndpointPath);
+this.#subscriptionsEndpoint = new BaseEndpoint( this, subscriptionsEndpointPath);
+this.#paymentsEndpoint = new BaseEndpoint( this, paymentsEndpointPath);
+```
+
 }
+
+getPlans() {
+return this.#plansEndpoint.getAll();
+}
+
+getSubscriptions() {
+return this.#subscriptionsEndpoint.getAll();
+}
+
+getPayments() {
+return this.#paymentsEndpoint.getAll();
+}
+}
+
