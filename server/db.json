@@ -986,16 +986,18 @@
     },
     {
       "id": 2,
+      "uuid": "",
       "activeTourId": 2,
       "reportedByUserId": 8,
       "description": "Retraso por bloqueo en la vía hacia Chivay.",
       "latitude": -15.7,
       "longitude": -71.55,
       "reportedAt": "2026-10-01T08:40:00",
-      "status": "IN_REVIEW"
+      "status": "RESOLVED"
     },
     {
       "id": 3,
+      "uuid": "",
       "activeTourId": 3,
       "reportedByUserId": 11,
       "description": "Pérdida de una mochila en la Plaza de Armas.",
@@ -1006,13 +1008,14 @@
     },
     {
       "id": 4,
-      "activeTourId": 3,
+      "uuid": "",
+      "activeTourId": 4,
       "reportedByUserId": 6,
       "description": "Lluvia ligera, se ajustó el recorrido.",
       "latitude": -12.0462,
       "longitude": -77.0305,
       "reportedAt": "2026-09-20T09:45:00",
-      "status": "CLOSED"
+      "status": "RESOLVED"
     }
   ],
   "plans": [
