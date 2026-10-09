@@ -15,17 +15,18 @@ const isEdit = computed(() => Boolean(route.params.id));
 
 const form = ref({
   description: "",
-  activeTourId: 1,
-  reportedByUserId: 1,
-  latitude: 0,
-  longitude: 0,
+  activeTourId: null,
+  reportedByUserId: null,
+  latitude: "",
+  longitude: "",
   reportedAt: new Date().toISOString(),
   status: IncidentStatus.OPEN
 });
 
-onMounted(() => {
+onMounted(async () => {
   if (!isEdit.value) return;
 
+  if (!store.incidentsLoaded) await store.fetchIncidents();
   const incident = store.getIncidentById(route.params.id);
   if (incident) {
     form.value = {
@@ -42,15 +43,30 @@ onMounted(() => {
   }
 });
 
-function saveIncident() {
+async function saveIncident() {
+  const latitude = Number(form.value.latitude);
+  const longitude = Number(form.value.longitude);
+  if (!form.value.description.trim() || !form.value.activeTourId || !Number.isInteger(Number(form.value.activeTourId)) ||
+      Number(form.value.activeTourId) < 1 || !Number.isInteger(Number(form.value.reportedByUserId)) ||
+      !form.value.reportedByUserId || Number(form.value.reportedByUserId) < 1 ||
+      form.value.latitude === "" || form.value.latitude === null ||
+      form.value.longitude === "" || form.value.longitude === null ||
+      !Number.isFinite(latitude) || latitude < -90 || latitude > 90 ||
+      !Number.isFinite(longitude) || longitude < -180 || longitude > 180) return;
+
   const incident = new Incident({
     id: isEdit.value ? Number(route.params.id) : null,
-    ...form.value
+    ...form.value,
+    activeTourId: Number(form.value.activeTourId),
+    reportedByUserId: Number(form.value.reportedByUserId),
+    latitude,
+    longitude
   });
 
-  if (isEdit.value) store.updateIncident(incident);
-  else store.addIncident(incident);
-  router.push({name: "incidents"});
+  const saved = isEdit.value
+      ? await store.updateIncident(incident)
+      : await store.addIncident(incident);
+  if (saved) router.push({name: "incidents"});
 }
 
 function cancel() {
@@ -118,11 +134,11 @@ function cancel() {
           <div class="incident-form__location-fields">
             <div class="incident-form__field">
               <label for="incident-latitude">{{ t('incidents.latitude') }}</label>
-              <input id="incident-latitude" v-model.number="form.latitude" class="form-control" type="number" step="any" min="-90" max="90">
+              <input id="incident-latitude" v-model.number="form.latitude" class="form-control" type="number" step="any" min="-90" max="90" required>
             </div>
             <div class="incident-form__field">
               <label for="incident-longitude">{{ t('incidents.longitude') }}</label>
-              <input id="incident-longitude" v-model.number="form.longitude" class="form-control" type="number" step="any" min="-180" max="180">
+              <input id="incident-longitude" v-model.number="form.longitude" class="form-control" type="number" step="any" min="-180" max="180" required>
             </div>
           </div>
         </fieldset>

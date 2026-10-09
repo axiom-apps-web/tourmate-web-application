@@ -31,11 +31,47 @@ export class SubscriptionApi extends BaseApi {
     return this.#plansEndpoint.getAll();
   }
 
+  createPlan(resource) {
+    return this.#plansEndpoint.create(resource);
+  }
+
+  updatePlan(id, resource) {
+    return this.#plansEndpoint.update(id, resource);
+  }
+
+  deletePlan(id) {
+    return this.#plansEndpoint.delete(id);
+  }
+
   getSubscriptions() {
     return this.#subscriptionsEndpoint.getAll();
   }
 
+  createSubscription(resource) {
+    return this.#subscriptionsEndpoint.create(resource);
+  }
+
+  updateSubscription(id, resource) {
+    return this.#subscriptionsEndpoint.update(id, resource);
+  }
+
+  deleteSubscription(id) {
+    return this.#subscriptionsEndpoint.delete(id);
+  }
+
   getPayments() {
     return this.#paymentsEndpoint.getAll();
+  }
+
+  createPayment(resource) {
+    return this.#paymentsEndpoint.create(resource);
+  }
+
+  updatePayment(id, resource) {
+    return this.#paymentsEndpoint.update(id, resource);
+  }
+
+  deletePayment(id) {
+    return this.#paymentsEndpoint.delete(id);
   }
 }

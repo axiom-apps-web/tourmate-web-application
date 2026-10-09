@@ -43,13 +43,15 @@ export const useIncidentStore = defineStore('incident', () => {
      * Loads incidents from infrastructure and updates application state.
      * @returns {void}
      */
-    function fetchIncidents() {
-        incidentApi.getIncidents().then(response => {
+    async function fetchIncidents() {
+        try {
+            const response = await incidentApi.getIncidents()
             incidents.value = IncidentAssembler.toEntitiesFromResponse(response);
             incidentsLoaded.value = true;
-        }).catch(error => {
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
     /**
@@ -67,14 +69,17 @@ export const useIncidentStore = defineStore('incident', () => {
      * @param {Incident} incident - Incident entity to persist.
      * @returns {void}
      */
-    function addIncident(incident) {
-        incidentApi.createIncident(incident).then(response => {
+    async function addIncident(incident) {
+        try {
+            const response = await incidentApi.createIncident(incident)
             const resource = response.data;
             const newIncident = IncidentAssembler.toEntityFromResource(resource);
             incidents.value.push(newIncident);
-        }).catch(error => {
+            return true;
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
     /**
@@ -82,15 +87,18 @@ export const useIncidentStore = defineStore('incident', () => {
      * @param {Incident} incident - Incident entity with updated data.
      * @returns {void}
      */
-    function updateIncident(incident) {
-        incidentApi.updateIncident(incident).then(response => {
+    async function updateIncident(incident) {
+        try {
+            const response = await incidentApi.updateIncident(incident)
             const resource = response.data;
             const updatedIncident = IncidentAssembler.toEntityFromResource(resource);
             const index = incidents.value.findIndex(i => i.id === updatedIncident.id);
             if (index !== -1) incidents.value[index] = updatedIncident;
-        }).catch(error => {
+            return true;
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
     /**
@@ -98,9 +106,10 @@ export const useIncidentStore = defineStore('incident', () => {
      * @param {Incident} incident - Incident entity to resolve.
      * @returns {void}
      */
-    function resolveIncident(incident) {
-        incident.resolve();
-        updateIncident(incident);
+    async function resolveIncident(incident) {
+        const resolvedIncident = new Incident({...incident});
+        resolvedIncident.resolve();
+        return updateIncident(resolvedIncident);
     }
 
     /**
@@ -108,13 +117,16 @@ export const useIncidentStore = defineStore('incident', () => {
      * @param {Incident} incident - Incident entity to remove.
      * @returns {void}
      */
-    function deleteIncident(incident) {
-        incidentApi.deleteIncident(incident.id).then(() => {
+    async function deleteIncident(incident) {
+        try {
+            await incidentApi.deleteIncident(incident.id)
             const index = incidents.value.findIndex(i => i.id === incident.id);
             if (index !== -1) incidents.value.splice(index, 1);
-        }).catch(error => {
+            return true;
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
     return {

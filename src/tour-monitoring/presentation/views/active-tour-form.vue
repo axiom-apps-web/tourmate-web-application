@@ -152,7 +152,7 @@ function navigateBack() {
   router.push({name: "tour-monitoring-active-tours"});
 }
 
-function saveActiveTour() {
+async function saveActiveTour() {
   submitted.value = true;
   const latitude = Number(form.value.currentLatitude);
   const longitude = Number(form.value.currentLongitude);
@@ -175,9 +175,8 @@ function saveActiveTour() {
     currentLongitude: longitude,
     finishedAt: form.value.finishedAt || null,
   });
-  if (isEdit.value) updateActiveTour(activeTour);
-  else addActiveTour(activeTour);
-  navigateBack();
+  const saved = isEdit.value ? await updateActiveTour(activeTour) : await addActiveTour(activeTour);
+  if (saved) navigateBack();
 }
 </script>
 
@@ -211,10 +210,10 @@ function saveActiveTour() {
               class="w-full"
               @update:model-value="onTourChange"
               :aria-invalid="submitted && !form.tourId"
-              aria-describedby="active-tour-tour-hint"
+              :aria-describedby="submitted && !form.tourId ? 'active-tour-tour-hint active-tour-tour-error' : 'active-tour-tour-hint'"
           />
           <small id="active-tour-tour-hint">{{ t("activeTour.tour-hint") }}</small>
-          <small v-if="submitted && !form.tourId" class="active-tour-field-error" role="alert">
+          <small v-if="submitted && !form.tourId" id="active-tour-tour-error" class="active-tour-field-error" role="alert">
             {{ t("activeTour.error.tour-required") }}
           </small>
         </div>
@@ -233,10 +232,10 @@ function saveActiveTour() {
               required
               class="w-full"
               :aria-invalid="submitted && !form.tourScheduleId"
-              aria-describedby="active-tour-schedule-hint"
+              :aria-describedby="submitted && scheduleSelectionInvalid ? 'active-tour-schedule-hint active-tour-schedule-error' : 'active-tour-schedule-hint'"
           />
           <small id="active-tour-schedule-hint">{{ t("activeTour.schedule-hint") }}</small>
-          <small v-if="submitted && scheduleSelectionInvalid" class="active-tour-field-error" role="alert">
+          <small v-if="submitted && scheduleSelectionInvalid" id="active-tour-schedule-error" class="active-tour-field-error" role="alert">
             {{ t(hasSchedulesForTour ? "activeTour.error.schedule-required" : "activeTour.no-schedules-for-tour") }}
           </small>
         </div>
@@ -255,10 +254,10 @@ function saveActiveTour() {
               required
               class="w-full"
               :aria-invalid="submitted && !form.guideId"
-              aria-describedby="active-tour-guide-hint"
+              :aria-describedby="submitted && !form.guideId ? 'active-tour-guide-hint active-tour-guide-error' : 'active-tour-guide-hint'"
           />
           <small id="active-tour-guide-hint">{{ t("activeTour.guide-hint") }}</small>
-          <small v-if="submitted && !form.guideId" class="active-tour-field-error" role="alert">
+          <small v-if="submitted && !form.guideId" id="active-tour-guide-error" class="active-tour-field-error" role="alert">
             {{ t("activeTour.error.guide-required") }}
           </small>
         </div>
@@ -272,8 +271,9 @@ function saveActiveTour() {
               autocomplete="off"
               class="w-full"
               :aria-invalid="submitted && !form.status.trim()"
+              :aria-describedby="submitted && !form.status.trim() ? 'active-tour-status-error' : undefined"
           />
-          <small v-if="submitted && !form.status.trim()" class="active-tour-field-error" role="alert">
+          <small v-if="submitted && !form.status.trim()" id="active-tour-status-error" class="active-tour-field-error" role="alert">
             {{ t("activeTour.error.status-required") }}
           </small>
         </div>
@@ -287,8 +287,9 @@ function saveActiveTour() {
               class="form-control"
               required
               :aria-invalid="submitted && !form.startedAt"
+              :aria-describedby="submitted && !form.startedAt ? 'active-tour-started-at-error' : undefined"
           >
-          <small v-if="submitted && !form.startedAt" class="active-tour-field-error" role="alert">
+          <small v-if="submitted && !form.startedAt" id="active-tour-started-at-error" class="active-tour-field-error" role="alert">
             {{ t("activeTour.error.startedAt-required") }}
           </small>
         </div>
@@ -311,6 +312,7 @@ function saveActiveTour() {
                   class="form-control"
                   required
                   :aria-invalid="submitted && (form.currentLatitude === '' || Number(form.currentLatitude) < -90 || Number(form.currentLatitude) > 90)"
+                  :aria-describedby="submitted && (form.currentLatitude === '' || Number(form.currentLatitude) < -90 || Number(form.currentLatitude) > 90) ? 'active-tour-coordinates-error' : undefined"
               >
             </div>
             <div class="active-tour-field">
@@ -325,11 +327,13 @@ function saveActiveTour() {
                   class="form-control"
                   required
                   :aria-invalid="submitted && (form.currentLongitude === '' || Number(form.currentLongitude) < -180 || Number(form.currentLongitude) > 180)"
+                  :aria-describedby="submitted && (form.currentLongitude === '' || Number(form.currentLongitude) < -180 || Number(form.currentLongitude) > 180) ? 'active-tour-coordinates-error' : undefined"
               >
             </div>
           </div>
           <small
               v-if="submitted && (coordinatesMissing || coordinatesInvalid)"
+              id="active-tour-coordinates-error"
               class="active-tour-field-error"
               role="alert"
           >

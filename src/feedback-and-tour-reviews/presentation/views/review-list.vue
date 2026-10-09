@@ -1,17 +1,17 @@
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import PvCarousel from "primevue/carousel";
 import useFeedbackStore from "../../application/feedback.store.js";
+import {Review} from "../../domain/model/review.entity.js";
+import {useConfirm} from "primevue";
 
 const { t } = useI18n();
 const store = useFeedbackStore();
-
-/** Shows three reviews on desktop, two on tablets and one on phones. */
-const responsiveOptions = [
-  { breakpoint: '1100px', numVisible: 2, numScroll: 1 },
-  { breakpoint: '700px', numVisible: 1, numScroll: 1 }
-];
+const confirm = useConfirm();
+const dialogVisible = ref(false);
+const saving = ref(false);
+const editingId = ref(null);
+const form = ref({userId: null, tourId: null, rating: 5, comment: ''});
 
 onMounted(() => {
   store.fetchReviews();
@@ -19,7 +19,8 @@ onMounted(() => {
 
 const formatDate = (value) => {
   if (!value) return '';
-  return new Date(value).getFullYear();
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? '' : date.getFullYear();
 };
 
 /** Returns the reviewer name, or a generic label when the user is unknown. */
@@ -32,6 +33,48 @@ const initials = (review) => userName(review)
     .slice(0, 2)
     .join('')
     .toUpperCase();
+
+function openNewReview() {
+  editingId.value = null;
+  form.value = {userId: null, tourId: null, rating: 5, comment: ''};
+  dialogVisible.value = true;
+}
+
+function openEditReview(review) {
+  editingId.value = review.id;
+  form.value = {userId: review.userId, tourId: review.tourId, rating: review.rating, comment: review.comment};
+  dialogVisible.value = true;
+}
+
+async function saveReview() {
+  if (!form.value.userId || !form.value.tourId ||
+      !Number.isInteger(Number(form.value.rating)) || Number(form.value.rating) < 1 || Number(form.value.rating) > 5) return;
+  saving.value = true;
+  const review = new Review({
+    id: editingId.value,
+    userId: Number(form.value.userId),
+    tourId: Number(form.value.tourId),
+    rating: Number(form.value.rating),
+    comment: form.value.comment.trim(),
+    commentId: editingId.value ? store.getReviewById(editingId.value)?.commentId ?? null : null,
+    createdAt: editingId.value ? store.getReviewById(editingId.value)?.createdAt : new Date().toISOString()
+  });
+  const saved = editingId.value
+      ? await store.updateReview(review)
+      : await store.addReview(review);
+  saving.value = false;
+  if (saved) dialogVisible.value = false;
+}
+
+function confirmDelete(review) {
+  confirm.require({
+    message: t('reviews.delete_confirm'),
+    header: t('reviews.delete'),
+    icon: 'pi pi-exclamation-triangle',
+    acceptClass: 'p-button-danger',
+    accept: () => store.deleteReview(review)
+  });
+}
 </script>
 
 <template>
@@ -40,6 +83,7 @@ const initials = (review) => userName(review)
       <p class="reviews-eyebrow">{{ t('shell.workspace') }}</p>
       <h1 id="reviews-title" class="page-heading">{{ t('reviews.list_title') }}</h1>
       <p class="page-description">{{ t('reviews.list_subtitle') }}</p>
+      <pv-button class="reviews-add" :label="t('reviews.add_new')" icon="pi pi-plus" :disabled="!store.loaded" @click="openNewReview" />
     </header>
 
     <p v-if="!store.loaded && !store.errors.length" class="reviews-state" role="status" aria-live="polite">
@@ -57,18 +101,8 @@ const initials = (review) => userName(review)
       <p>{{ t('reviews.empty_description') }}</p>
     </div>
 
-    <pv-carousel
-        v-else
-        :value="store.reviews"
-        :num-visible="3"
-        :num-scroll="1"
-        :responsive-options="responsiveOptions"
-        :aria-label="t('reviews.list_title')"
-        class="reviews-carousel"
-    >
-      <template #item="{ data }">
-        <div class="review-slide">
-          <article class="review-card surface-card">
+    <div v-else class="reviews-grid">
+      <article v-for="data in store.reviews" :key="data.id" class="review-card surface-card">
             <span class="review-quote" aria-hidden="true">“</span>
             <div role="img" :aria-label="t('reviews.rating_aria', {rating: data.rating})">
               <pv-rating :model-value="data.rating" readonly/>
@@ -86,10 +120,39 @@ const initials = (review) => userName(review)
                 </span>
               </div>
             </footer>
-          </article>
+            <div class="review-actions" role="group" :aria-label="t('reviews.actions')">
+              <pv-button :label="t('reviews.edit')" icon="pi pi-pencil" text @click="openEditReview(data)" />
+              <pv-button :label="t('reviews.delete')" icon="pi pi-trash" severity="danger" text @click="confirmDelete(data)" />
+            </div>
+      </article>
+    </div>
+
+    <pv-dialog v-model:visible="dialogVisible" modal :header="t(editingId ? 'reviews.edit_title' : 'reviews.new_title')" :style="{width: 'min(36rem, 94vw)'}">
+      <form class="review-form" @submit.prevent="saveReview">
+        <label for="review-user">{{ t('reviews.user') }} *</label>
+        <select id="review-user" v-model="form.userId" required>
+          <option :value="null" disabled>{{ t('reviews.user_id_label') }}</option>
+          <option v-for="user in store.users" :key="user.id" :value="user.id">
+            {{ [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email || `#${user.id}` }}
+          </option>
+        </select>
+        <label for="review-tour">{{ t('reviews.tour_id') }} *</label>
+        <select id="review-tour" v-model="form.tourId" required>
+          <option :value="null" disabled>{{ t('reviews.tour_id_label') }}</option>
+          <option v-for="tour in store.tours" :key="tour.id" :value="tour.id">{{ tour.title }}</option>
+        </select>
+        <label for="review-rating">{{ t('reviews.rating_label') }}</label>
+        <select id="review-rating" v-model.number="form.rating" required>
+          <option v-for="rating in [1, 2, 3, 4, 5]" :key="rating" :value="rating">{{ rating }} / 5</option>
+        </select>
+        <label for="review-comment">{{ t('reviews.comment_label') }}</label>
+        <textarea id="review-comment" v-model="form.comment" rows="4" maxlength="2000"></textarea>
+        <div class="review-form__actions">
+          <pv-button type="submit" :label="t(editingId ? 'reviews.update' : 'reviews.submit')" icon="pi pi-save" :loading="saving" />
+          <pv-button type="button" :label="t('reviews.cancel')" severity="secondary" outlined @click="dialogVisible = false" />
         </div>
-      </template>
-    </pv-carousel>
+      </form>
+    </pv-dialog>
   </section>
 </template>
 
@@ -112,9 +175,14 @@ const initials = (review) => userName(review)
   text-transform: uppercase;
 }
 
-.review-slide {
-  height: 100%;
-  padding: 0.55rem;
+.reviews-add {
+  margin-top: 1rem;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: 1rem;
 }
 
 .review-card {
@@ -169,7 +237,7 @@ const initials = (review) => userName(review)
   height: 2.75rem;
   border-radius: 50%;
   background: var(--tm-action-bg);
-  color: #fff;
+  color: var(--tm-action-text);
   font-weight: 700;
 }
 
@@ -234,17 +302,41 @@ const initials = (review) => userName(review)
   font-size: 1.3rem;
 }
 
-.reviews-carousel :deep(.p-carousel-prev-button),
-.reviews-carousel :deep(.p-carousel-next-button) {
-  color: var(--tm-green-900);
+.review-actions,
+.review-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
-.reviews-carousel :deep(.p-carousel-indicator-button) {
-  background: var(--tm-border);
+.review-form {
+  display: grid;
+  gap: 0.55rem;
 }
 
-.reviews-carousel :deep(.p-carousel-indicator-active .p-carousel-indicator-button) {
-  background: var(--tm-green-800);
+.review-form label {
+  margin-top: 0.3rem;
+  color: var(--tm-text);
+  font-weight: 600;
+}
+
+.review-form select,
+.review-form textarea {
+  width: 100%;
+  min-height: 2.6rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--tm-border);
+  border-radius: 0.5rem;
+  background: var(--tm-surface);
+  color: var(--tm-text);
+}
+
+.review-form textarea {
+  resize: vertical;
+}
+
+.review-form__actions {
+  margin-top: 0.75rem;
 }
 
 @media (max-width: 600px) {

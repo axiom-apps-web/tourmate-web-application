@@ -12,7 +12,7 @@ export class ReviewAssembler {
      * @returns {Review}
      */
     static toEntityFromResource(resource, comments = []) {
-        const comment = comments.find(item => item.reviewId === resource.id);
+        const comment = comments.find(item => String(item.reviewId) === String(resource.id));
         return new Review({
             ...resource,
             comment: comment ? comment.content : '',

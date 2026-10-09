@@ -66,11 +66,16 @@ const { t } = useI18n();
   padding: 0.65rem 1rem;
   border-radius: 0.6rem;
   background: var(--tm-action-bg);
-  color: #fff;
+  color: var(--tm-action-text);
   font-weight: 700;
 }
 
 .home-link:hover {
   background: var(--tm-action-hover);
+}
+
+.home-link:focus-visible {
+  outline: 3px solid var(--tm-focus);
+  outline-offset: 3px;
 }
 </style>

@@ -6,6 +6,7 @@ import {useRoute} from "vue-router";
 import useTourMonitoringStore from "../../application/tour-monitoring.store.js";
 import useTourManagementStore from "../../../tour-management/application/tour-management.store.js";
 import useIamStore from "../../../iam/application/iam.store.js";
+import {Participant} from "../../domain/model/participant.entity.js";
 
 const route = useRoute();
 const {t, locale} = useI18n();
@@ -20,21 +21,24 @@ const {tours, toursLoaded, tourSchedules, tourSchedulesLoaded, errors: tourError
 const {tourGuides, tourGuidesLoaded, users, usersLoaded, errors: iamErrors} = storeToRefs(iamStore);
 
 const participantSearch = ref('');
+const participantDialogVisible = ref(false);
+const participantSaving = ref(false);
+const editingParticipantId = ref(null);
+const participantForm = ref({userId: null, joinedAt: ''});
 const errors = computed(() => [
   ...monitoringErrors.value,
   ...tourErrors.value,
   ...iamErrors.value
 ]);
-const isLoading = computed(() => {
-  const allDataLoaded = activeToursLoaded.value &&
+const allDataLoaded = computed(() =>
+  activeToursLoaded.value &&
       participantsLoaded.value &&
       toursLoaded.value &&
       tourSchedulesLoaded.value &&
       tourGuidesLoaded.value &&
-      usersLoaded.value;
-
-  return !allDataLoaded && errors.value.length === 0;
-});
+      usersLoaded.value
+);
+const isLoading = computed(() => !allDataLoaded.value && errors.value.length === 0);
 
 const activeTour = computed(() =>
     activeTours.value.find(expedition =>
@@ -99,6 +103,48 @@ function formatJoinedAt(value) {
   return new Intl.DateTimeFormat(locale.value, {dateStyle: 'medium'}).format(date);
 }
 
+function toLocalDateTime(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const pad = number => String(number).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function openNewParticipant() {
+  editingParticipantId.value = null;
+  participantForm.value = {userId: null, joinedAt: toLocalDateTime(new Date().toISOString())};
+  participantDialogVisible.value = true;
+}
+
+function openEditParticipant(participant) {
+  editingParticipantId.value = participant.id;
+  participantForm.value = {userId: participant.userId, joinedAt: toLocalDateTime(participant.joinedAt)};
+  participantDialogVisible.value = true;
+}
+
+async function saveParticipant() {
+  if (!participantForm.value.userId || !participantForm.value.joinedAt || !activeTour.value) return;
+  participantSaving.value = true;
+  const participant = new Participant({
+    id: editingParticipantId.value,
+    userId: Number(participantForm.value.userId),
+    joinedAt: new Date(participantForm.value.joinedAt).toISOString(),
+    tourScheduleId: activeTour.value.tourScheduleId
+  });
+  const saved = editingParticipantId.value
+      ? await monitoringStore.updateParticipant(participant)
+      : await monitoringStore.addParticipant(participant);
+  participantSaving.value = false;
+  if (saved) participantDialogVisible.value = false;
+}
+
+async function removeParticipant(participant) {
+  if (window.confirm(t('liveMonitoring.remove_participant_confirmation', {name: participantName(participant)}))) {
+    await monitoringStore.deleteParticipant(participant);
+  }
+}
+
 onMounted(() => {
   if (!activeToursLoaded.value) monitoringStore.fetchActiveTours();
   if (!participantsLoaded.value) monitoringStore.fetchParticipants();
@@ -133,11 +179,16 @@ onMounted(() => {
       {{ t('liveMonitoring.loading_route') }}
     </p>
 
-    <div v-else-if="errors.length" class="live-tour__message live-tour__message--error" role="alert">
+    <div v-else-if="errors.length && !allDataLoaded" class="live-tour__message live-tour__message--error" role="alert">
       {{ t('liveMonitoring.load_error') }}: {{ errors.map(error => error.message).join(', ') }}
     </div>
 
-    <div v-else-if="!activeTour || !tour" class="live-tour__empty">
+    <template v-else>
+    <div v-if="errors.length" class="live-tour__message live-tour__message--error" role="alert">
+      {{ t('liveMonitoring.load_error') }}: {{ errors.map(error => error.message).join(', ') }}
+    </div>
+
+    <div v-if="!activeTour || !tour" class="live-tour__empty">
       <i class="pi pi-map" aria-hidden="true"></i>
       <h2>{{ t('liveMonitoring.tour_unavailable') }}</h2>
       <p>{{ t('liveMonitoring.tour_unavailable_hint') }}</p>
@@ -207,6 +258,7 @@ onMounted(() => {
             <span class="live-participants__expedition-id">
               {{ t('liveMonitoring.expedition_id', {id: activeTour.id}) }}
             </span>
+            <pv-button :label="t('liveMonitoring.add_participant_action')" icon="pi pi-user-plus" size="small" @click="openNewParticipant" />
           </header>
 
           <label class="live-participants__search">
@@ -246,6 +298,10 @@ onMounted(() => {
               <p class="participant-card__joined">
                 {{ t('liveMonitoring.joined_at', {date: formatJoinedAt(participant.joinedAt)}) }}
               </p>
+              <div class="participant-card__actions">
+                <pv-button :label="t('common.edit')" icon="pi pi-pencil" text size="small" @click="openEditParticipant(participant)" />
+                <pv-button :label="t('common.delete')" :aria-label="t('liveMonitoring.remove_participant', {name: participantName(participant)})" icon="pi pi-trash" text severity="danger" size="small" @click="removeParticipant(participant)" />
+              </div>
             </li>
           </ul>
 
@@ -255,6 +311,25 @@ onMounted(() => {
           </footer>
         </aside>
       </div>
+
+      <pv-dialog v-model:visible="participantDialogVisible" modal :header="t(editingParticipantId ? 'liveMonitoring.edit_participant' : 'liveMonitoring.new_participant')" :style="{width: 'min(32rem, 94vw)'}">
+        <form class="participant-form" @submit.prevent="saveParticipant">
+          <label for="participant-user">{{ t('liveMonitoring.traveler') }}</label>
+          <select id="participant-user" v-model="participantForm.userId" required>
+            <option :value="null" disabled>{{ t('liveMonitoring.select_traveler') }}</option>
+            <option v-for="user in users" :key="user.id" :value="user.id">
+              {{ [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email || `User #${user.id}` }}
+            </option>
+          </select>
+          <label for="participant-joined-at">{{ t('liveMonitoring.joined_at_field') }}</label>
+          <input id="participant-joined-at" v-model="participantForm.joinedAt" type="datetime-local" required>
+          <div class="participant-form__actions">
+            <pv-button type="submit" :label="t(editingParticipantId ? 'liveMonitoring.save_changes' : 'liveMonitoring.add_participant_submit')" icon="pi pi-save" :loading="participantSaving" />
+            <pv-button type="button" :label="t('common.cancel')" severity="secondary" outlined @click="participantDialogVisible = false" />
+          </div>
+        </form>
+      </pv-dialog>
+    </template>
     </template>
   </section>
 </template>
@@ -493,6 +568,7 @@ onMounted(() => {
   position: absolute;
   bottom: 1rem;
   left: 1rem;
+  max-width: calc(100% - 2rem);
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
@@ -502,6 +578,7 @@ onMounted(() => {
   background: var(--tm-surface);
   color: var(--tm-text);
   font-size: 0.78rem;
+  overflow-wrap: anywhere;
 }
 
 .live-map__position-label i,
@@ -598,8 +675,11 @@ onMounted(() => {
 
 .participant-card__status {
   flex: 0 0 auto;
+  max-width: 100%;
   padding: 0.3rem 0.45rem;
   font-size: 0.68rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .participant-card__id,
@@ -607,6 +687,39 @@ onMounted(() => {
   margin: 0.45rem 0 0;
   color: var(--tm-muted);
   font-size: 0.76rem;
+}
+
+.participant-card__actions,
+.participant-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.participant-form {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.participant-form input,
+.participant-form select {
+  min-height: 2.6rem;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--tm-border);
+  border-radius: 0.5rem;
+  background: var(--tm-surface);
+  color: var(--tm-text);
+}
+
+.participant-form label {
+  margin-top: 0.3rem;
+  color: var(--tm-text);
+  font-weight: 600;
+}
+
+.participant-form__actions {
+  margin-top: 0.75rem;
 }
 
 .participant-card__telemetry {
@@ -755,6 +868,16 @@ onMounted(() => {
 
   .live-participants {
     padding: 0.9rem;
+  }
+
+  .live-participants__header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .live-participants__header > :deep(.p-button) {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>
