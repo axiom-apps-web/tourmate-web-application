@@ -2,14 +2,12 @@ export class Plan {
   constructor({
     id = null,
     name = '',
-    description = '',
-    price = 0,
-    duration = '',
+    priceAmount = 0,
+    priceCurrency = 'USD',
   } = {}) {
     this.id = id;
     this.name = name;
-    this.description = description;
-    this.price = price;
-    this.duration = duration;
+    this.priceAmount = priceAmount;
+    this.priceCurrency = priceCurrency;
   }
 }
