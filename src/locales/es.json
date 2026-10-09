@@ -190,6 +190,7 @@
     "current-location": "Ubicación actual",
     "location-hint": "Las coordenadas se completan con el primer punto de control del tour seleccionado. Puedes ajustarlas si es necesario.",
     "loading-checkpoints": "Cargando puntos de control del tour para completar la ubicación inicial...",
+    "checkpoints-unavailable": "No se pudieron cargar los puntos de control. Ingresa las coordenadas manualmente.",
     "finishedAt-hint": "Déjalo vacío mientras la expedición siga en curso.",
     "create": "Crear tour activo",
     "update": "Guardar cambios",

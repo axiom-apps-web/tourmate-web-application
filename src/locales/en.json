@@ -190,6 +190,7 @@
     "current-location": "Current location",
     "location-hint": "Coordinates are filled from the first checkpoint of the selected tour. You can adjust them if needed.",
     "loading-checkpoints": "Loading tour checkpoints to fill the starting location...",
+    "checkpoints-unavailable": "Tour checkpoints could not be loaded. Enter the coordinates manually.",
     "finishedAt-hint": "Leave blank while the expedition is still in progress.",
     "create": "Create active tour",
     "update": "Save changes",

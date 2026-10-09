@@ -201,8 +201,6 @@ function confirmDelete(activeTour) {
     <div v-if="errors.length" class="active-tours__errors" role="alert">
       {{ t('errors.occurred') }}: {{ errors.map(error => error.message).join(', ') }}
     </div>
-
-    <pv-confirm-dialog />
   </section>
 </template>
 
