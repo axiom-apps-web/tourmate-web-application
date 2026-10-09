@@ -1,6 +1,6 @@
-import { Plan } from '../domain/model/plan.entity.js';
-import { Subscription } from '../domain/model/subscription.entity.js';
-import { Payment } from '../domain/model/payment.entity.js';
+import { Plan } from '../domain/plan.entity.js';
+import { Subscription } from '../domain/subscription.entity.js';
+import { Payment } from '../domain/payment.entity.js';
 
 export class SubscriptionAssembler {
   static toPlanEntity(resource) {
