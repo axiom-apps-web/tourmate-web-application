@@ -54,7 +54,7 @@ function findById(items, id) {
 function getTourTitle(activeTour) {
   const schedule = findById(tourSchedules.value, activeTour.tourScheduleId);
   const tour = findById(tours.value, schedule?.tourId);
-  return tour?.details?.title || `${t('activeTours.tourTitle')} #${schedule?.tourId ?? activeTour.tourScheduleId ?? '—'}`;
+  return tour?.title || `${t('activeTours.tourTitle')} #${schedule?.tourId ?? activeTour.tourScheduleId ?? '—'}`;
 }
 
 function getGuideName(guideId) {

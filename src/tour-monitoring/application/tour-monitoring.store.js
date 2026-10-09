@@ -242,13 +242,16 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
     return {
         activeTours,
         participants,
+        guides,
         tourSchedules,
         errors,
         activeToursLoaded,
         participantsLoaded,
+        guidesLoaded,
         tourSchedulesLoaded,
         activeToursCount,
         participantsCount,
+        guidesCount,
         tourSchedulesCount,
         fetchActiveTours,
         fetchGuides,
@@ -266,4 +269,3 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
 });
 
 export default useTourMonitoringStore;
-
