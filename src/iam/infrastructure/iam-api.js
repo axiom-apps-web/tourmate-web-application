@@ -1,6 +1,10 @@
 import { BaseApi } from '../../shared/infrastructure/base-api.js';
 import { BaseEndpoint } from '../../shared/infrastructure/base-endpoint.js';
 
+const fallbackApiBaseUrl = import.meta.env.VITE_TOURMATE_PLATFORM_API_URL;
+const usersApiBaseUrl = import.meta.env.VITE_USER_API_URL || fallbackApiBaseUrl;
+const agenciesApiBaseUrl = import.meta.env.VITE_AGENCIES_API_URL || fallbackApiBaseUrl;
+const tourGuidesApiBaseUrl = import.meta.env.VITE_TOUR_GUIDES_API_URL || fallbackApiBaseUrl;
 const usersEndpointPath      = import.meta.env.VITE_USERS_ENDPOINT_PATH;
 const agenciesEndpointPath   = import.meta.env.VITE_AGENCIES_ENDPOINT_PATH;
 const tourGuidesEndpointPath = import.meta.env.VITE_TOUR_GUIDES_ENDPOINT_PATH;
@@ -32,10 +36,16 @@ export class IamApi extends BaseApi {
 
     /** Creates endpoint clients for users, agencies, and tour guides. */
     constructor() {
-        super();
+        super(usersApiBaseUrl);
         this.#usersEndpoint = new BaseEndpoint(this, usersEndpointPath);
-        this.#agenciesEndpoint = new BaseEndpoint(this, agenciesEndpointPath);
-        this.#tourGuidesEndpoint = new BaseEndpoint(this, tourGuidesEndpointPath);
+        this.#agenciesEndpoint = new BaseEndpoint(
+            new BaseApi(agenciesApiBaseUrl),
+            agenciesEndpointPath
+        );
+        this.#tourGuidesEndpoint = new BaseEndpoint(
+            new BaseApi(tourGuidesApiBaseUrl),
+            tourGuidesEndpointPath
+        );
     }
 
     // --- Users ---
