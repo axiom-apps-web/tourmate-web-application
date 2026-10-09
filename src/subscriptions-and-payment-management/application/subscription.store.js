@@ -14,11 +14,12 @@ export const useSubscriptionStore = defineStore('subscription', () => {
 
   async function loadPlans() {
     loading.value = true;
+    errors.value = [];
     try {
-      const data = await api.getPlans();
-      plans.value = SubscriptionAssembler.toPlanEntities(data);
+      const response = await api.getPlans();
+      plans.value = SubscriptionAssembler.toPlanEntities(response.data);
     } catch (error) {
-      errors.value.push(error);
+      errors.value.push('Error al cargar los planes.');
     } finally {
       loading.value = false;
     }
@@ -26,10 +27,11 @@ export const useSubscriptionStore = defineStore('subscription', () => {
 
   async function loadSubscriptions() {
     loading.value = true;
+    errors.value = [];
     try {
-      const data = await api.getSubscriptions();
+      const response = await api.getSubscriptions();
       subscriptions.value =
-        SubscriptionAssembler.toSubscriptionEntities(data);
+          SubscriptionAssembler.toSubscriptionEntities(response.data);
     } catch (error) {
       errors.value.push('Error al cargar las suscripciones.');
     } finally {
@@ -39,9 +41,10 @@ export const useSubscriptionStore = defineStore('subscription', () => {
 
   async function loadPayments() {
     loading.value = true;
+    errors.value = [];
     try {
-      const data = await api.getPayments();
-      payments.value = SubscriptionAssembler.toPaymentEntities(data);
+      const response = await api.getPayments();
+      payments.value = SubscriptionAssembler.toPaymentEntities(response.data);
     } catch (error) {
       errors.value.push('Error al cargar los pagos.');
     } finally {
