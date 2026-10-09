@@ -74,7 +74,7 @@ const modules = [
   overflow: hidden;
   padding: clamp(1.5rem, 6vw, 4rem);
   border-radius: 1.5rem;
-  background: linear-gradient(120deg, #174b2a, #287542 68%, #4d8a55);
+  background: linear-gradient(120deg, #123f2d, #1b5e3f 68%, #347c59);
   color: #fff;
 }
 
@@ -94,6 +94,7 @@ const modules = [
 
 .home-hero h1 {
   font-family: var(--tm-heading-font);
+  color: #fff;
   max-width: 13ch;
   margin: 0;
   font-size: clamp(2.2rem, 5.6vw, 4.1rem);

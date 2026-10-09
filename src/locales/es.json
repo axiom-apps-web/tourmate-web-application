@@ -137,6 +137,7 @@
     "sort_descending": "Ordenar de forma descendente",
     "sort_ascending": "Ordenar de forma ascendente",
     "card_label": "Tour activo {id}",
+    "watch-live": "Ver tour activo {id} en vivo",
     "pagination": "Paginación de tours activos",
     "empty-title": "No hay tours activos",
     "empty-description": "Las expediciones activas aparecerán aquí cuando estén disponibles.",
@@ -235,7 +236,19 @@
     "telemetry_unavailable": "La fuente de datos no proporciona lecturas de wearables.",
     "no_active_expeditions": "No hay expediciones activas",
     "no_active_expeditions_hint": "Cuando un tour esté en curso, aquí aparecerán su ruta y sus participantes.",
-    "loading_route": "Cargando ruta..."
+    "loading_route": "Cargando ruta...",
+    "back_to_tours": "Volver a los tours",
+    "live_title": "Monitoreo en vivo",
+    "tour_unavailable": "Tour no disponible",
+    "tour_unavailable_hint": "No se encontró este tour en el catálogo.",
+    "expedition_id": "Expedición #{id}",
+    "latest_position": "Última ubicación reportada por la expedición",
+    "location_unavailable": "Ubicación no disponible",
+    "position_map_description": "Vista esquemática de la ubicación de {tour}. Últimas coordenadas: {coordinates}.",
+    "map_data_notice": "Vista esquemática; no hay datos cartográficos ni de ruta disponibles.",
+    "participant_on_tour": "En el tour",
+    "joined_date_unavailable": "Fecha de inscripción no disponible",
+    "load_error": "No se pudieron cargar los datos del tour"
   },
   "reviews": {
     "list_title": "Gestión de Reseñas y Feedback",

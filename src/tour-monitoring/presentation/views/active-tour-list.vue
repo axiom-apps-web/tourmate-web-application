@@ -78,6 +78,13 @@ function navigateToEdit(id) {
   router.push({name: 'tour-monitoring-active-tour-edit', params: {id}});
 }
 
+function navigateToLive(activeTour) {
+  router.push({
+    name: 'tour-monitoring-live-tour',
+    params: {activeTourId: activeTour.id},
+  });
+}
+
 function confirmDelete(activeTour) {
   confirm.require({
     message: t('activeTours.delete_confirm'),
@@ -154,6 +161,13 @@ function confirmDelete(activeTour) {
         </dl>
 
         <div class="tour-card__actions">
+          <pv-button
+              icon="pi pi-eye"
+              text
+              rounded
+              :aria-label="t('activeTours.watch-live', {id: activeTour.id})"
+              @click="navigateToLive(activeTour)"
+          />
           <pv-button
               icon="pi pi-pencil"
               text

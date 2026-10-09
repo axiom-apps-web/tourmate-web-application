@@ -137,6 +137,7 @@
     "sort_descending": "Sort descending",
     "sort_ascending": "Sort ascending",
     "card_label": "Active tour {id}",
+    "watch-live": "Watch active tour {id} live",
     "pagination": "Active tours pagination",
     "empty-title": "No active tours",
     "empty-description": "Active expeditions will appear here when they are available.",
@@ -234,7 +235,19 @@
     "telemetry_unavailable": "Wearable readings are not available from this data source.",
     "no_active_expeditions": "No active expeditions",
     "no_active_expeditions_hint": "When a tour is in progress, its route and participants will appear here.",
-    "loading_route": "Loading route..."
+    "loading_route": "Loading route...",
+    "back_to_tours": "Back to tours",
+    "live_title": "Live tour monitoring",
+    "tour_unavailable": "Tour unavailable",
+    "tour_unavailable_hint": "This tour could not be found in the catalog.",
+    "expedition_id": "Expedition #{id}",
+    "latest_position": "Latest location reported by the expedition",
+    "location_unavailable": "Location not available",
+    "position_map_description": "Schematic location view for {tour}. Latest coordinates: {coordinates}.",
+    "map_data_notice": "Schematic view; map and route data are not available.",
+    "participant_on_tour": "On tour",
+    "joined_date_unavailable": "Join date unavailable",
+    "load_error": "Could not load live tour data"
   },
   "reviews": {
     "list_title": "Review & Feedback Management",
