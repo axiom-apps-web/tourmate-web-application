@@ -93,7 +93,7 @@ const menuTokens = {
           <strong class="tour-card-value" >{{ tour.duration }}</strong>
         </div>
         <div class="flex flex-column align-items-end gap-1">
-          <span class="tour-card-label">From</span>
+          <span class="tour-card-label">Price</span>
           <strong class="tour-card-price">${{ tour.priceAmount }} {{ tour.priceCurrency }}</strong>
         </div>
       </div>

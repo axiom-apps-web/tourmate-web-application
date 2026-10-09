@@ -21,11 +21,11 @@ onMounted(() => {
 })
 
 const navigateToNew = () => {
-  router.push({ name:'tour-management-tour-new' })
+  router.push({ name:'tour-management-tours-new' })
 }
 
-const navigateToEdit = (id) => {
-  router.push({ name: 'tour-management-tour-edit', params: { id } })
+const navigateToEdit = (tour) => {
+  router.push({ name: 'tour-management-tours-edit', params: { id: tour.id } })
 }
 const confirmDelete = (tour) => {
   confirm.require({
