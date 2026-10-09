@@ -62,8 +62,7 @@ const useTourManagementStore = defineStore('tour-management',() => {
     }
 
     function getTourById(id) {
-        let idNum = parseInt(id)
-        return tours.value.find(tour => tour.id === idNum)
+        return tours.value.find(tour => String(tour.id) === String(id))
     }
 
     async function addTour(tour) {

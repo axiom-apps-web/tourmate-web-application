@@ -24,7 +24,7 @@ const menuItems = computed(() => [
   {
     label: t('tours.delete'),
     icon: 'pi pi-trash',
-    danger: true,
+    class: 'tour-menu-item-danger',
     command: () => emit('delete', props.tour)
   }
 ]);
@@ -45,14 +45,7 @@ const menuItems = computed(() => [
           :aria-expanded="menuOpen"
           @click="toggleMenu"
       />
-      <pv-menu ref="menu" :model="menuItems" popup @show="menuOpen = true" @hide="menuOpen = false">
-        <template #item="{item, props: itemProps}">
-          <a v-bind="itemProps.action" :class="['tour-menu-item', {'tour-menu-item-danger': item.danger}]">
-            <i :class="item.icon" aria-hidden="true"></i>
-            <span>{{ item.label }}</span>
-          </a>
-        </template>
-      </pv-menu>
+      <pv-menu ref="menu" :model="menuItems" popup @show="menuOpen = true" @hide="menuOpen = false" />
     </header>
 
     <div class="tour-item__content">
