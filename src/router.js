@@ -1,6 +1,9 @@
 import {createRouter, createWebHistory} from "vue-router";
 import Home from "./shared/presentation/views/home.vue";
 import tourMonitoringRoutes from "./tour-monitoring/presentation/tour-monitoring-routes.js";
+
+import feedbackAndTourReviewsRoutes from "./feedback-and-tour-reviews/presentation/feedback-and-tour-reviews-routes.js";
+
 import safetyRoutes from "./safety-and-incident-management/safety-incident.routes.js";
 
 
@@ -12,7 +15,11 @@ const routes = [
     { path: '/home',            name: 'home',       component: Home,        meta: { title: 'Home' } },
     { path: '/about',           name: 'about',      component: about,       meta: { title: 'About' } },
     { path: '/tour-monitoring', name: 'tour-monitoring', children: tourMonitoringRoutes },
+
+    { path: '/feedback-and-tour-reviews', name: 'feedback-and-tour-reviews', children: feedbackAndTourReviewsRoutes },
+
     { path: '/incidents',     name: 'incidents-root', children: safetyRoutes },
+
     { path: '/',                redirect: '/home' },
     { path: '/:pathMatch(.*)*', name: 'not-found', component: pageNotFound, meta: { title: 'Page Not Found' } }
 ];
