@@ -35,35 +35,53 @@ const initials = (review) => userName(review)
 </script>
 
 <template>
-  <section class="p-4 md:p-5 pb-8">
-    <div class="mt-4 mb-4">
-      <h1 class="text-3xl font-bold text-color m-0">{{ t('reviews.list_title') }}</h1>
-      <p class="m-0 mt-2 text-color-secondary">{{ t('reviews.list_subtitle') }}</p>
+  <section class="reviews-page page-shell" aria-labelledby="reviews-title">
+    <header class="reviews-header">
+      <p class="reviews-eyebrow">{{ t('shell.workspace') }}</p>
+      <h1 id="reviews-title" class="page-heading">{{ t('reviews.list_title') }}</h1>
+      <p class="page-description">{{ t('reviews.list_subtitle') }}</p>
+    </header>
+
+    <p v-if="!store.loaded && !store.errors.length" class="reviews-state" role="status" aria-live="polite">
+      <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+      {{ t('common.loading') }}
+    </p>
+
+    <div v-else-if="store.errors.length" class="reviews-state reviews-state--error" role="alert">
+      {{ store.errors.map(error => error.message).join(', ') }}
     </div>
 
-    <p v-if="!store.loaded && !store.errors.length" class="text-color-secondary">{{ t('common.loading') }}</p>
-
-    <div v-else-if="!store.reviews.length" class="text-center p-4">
-      <h3 class="m-0">{{ t('reviews.empty_title') }}</h3>
-      <p class="m-0 mt-2 text-color-secondary">{{ t('reviews.empty_description') }}</p>
+    <div v-else-if="!store.reviews.length" class="reviews-empty surface-card">
+      <span class="reviews-empty__icon" aria-hidden="true"><i class="pi pi-star"></i></span>
+      <h2>{{ t('reviews.empty_title') }}</h2>
+      <p>{{ t('reviews.empty_description') }}</p>
     </div>
 
-    <pv-carousel v-else :value="store.reviews" :num-visible="3" :num-scroll="1"
-                 :responsive-options="responsiveOptions">
+    <pv-carousel
+        v-else
+        :value="store.reviews"
+        :num-visible="3"
+        :num-scroll="1"
+        :responsive-options="responsiveOptions"
+        :aria-label="t('reviews.list_title')"
+        class="reviews-carousel"
+    >
       <template #item="{ data }">
         <div class="review-slide">
-          <article class="review-card">
+          <article class="review-card surface-card">
             <span class="review-quote" aria-hidden="true">“</span>
-            <pv-rating :model-value="data.rating" readonly/>
+            <div role="img" :aria-label="t('reviews.rating_aria', {rating: data.rating})">
+              <pv-rating :model-value="data.rating" readonly/>
+            </div>
 
             <p v-if="data.comment" class="review-comment">{{ data.comment }}</p>
-            <p v-else class="review-comment text-color-secondary font-italic">{{ t('reviews.no_comment') }}</p>
+            <p v-else class="review-comment review-comment--empty">{{ t('reviews.no_comment') }}</p>
 
-            <footer class="flex align-items-center gap-3">
+            <footer class="review-author">
               <span class="review-avatar" aria-hidden="true">{{ initials(data) }}</span>
-              <div class="flex flex-column">
-                <span class="font-bold">{{ userName(data) }}</span>
-                <span class="text-sm text-color-secondary">
+              <div class="review-author__details">
+                <strong>{{ userName(data) }}</strong>
+                <span>
                   {{ store.getTourTitle(data.tourId) || t('reviews.unknown_tour') }} · {{ formatDate(data.createdAt) }}
                 </span>
               </div>
@@ -76,9 +94,27 @@ const initials = (review) => userName(review)
 </template>
 
 <style scoped>
+.reviews-page {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.reviews-header {
+  margin-bottom: 0.5rem;
+}
+
+.reviews-eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--tm-green-800);
+  font-size: 0.75rem;
+  font-weight: 750;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
 .review-slide {
   height: 100%;
-  padding: 0.5rem;
+  padding: 0.55rem;
 }
 
 .review-card {
@@ -86,11 +122,8 @@ const initials = (review) => userName(review)
   flex-direction: column;
   gap: 1rem;
   height: 100%;
-  min-height: 15rem;
-  padding: 1.75rem;
-  border: 1px solid var(--p-content-border-color);
-  border-radius: 12px;
-  background: var(--p-content-background);
+  min-height: 17rem;
+  padding: clamp(1.1rem, 3vw, 1.75rem);
 }
 
 .review-quote {
@@ -98,13 +131,33 @@ const initials = (review) => userName(review)
   font-family: Georgia, serif;
   font-size: 3.5rem;
   line-height: 1;
-  color: var(--p-primary-color);
+  color: var(--tm-green-800);
+}
+
+.review-card :deep(.p-rating-icon) {
+  color: var(--tm-green-800);
 }
 
 .review-comment {
   flex: 1;
   margin: 0;
+  color: var(--tm-text);
   line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.review-comment--empty {
+  color: var(--tm-muted);
+  font-style: italic;
+}
+
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--tm-border);
 }
 
 .review-avatar {
@@ -115,8 +168,88 @@ const initials = (review) => userName(review)
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 50%;
-  background: var(--p-primary-color);
-  color: var(--p-primary-contrast-color);
+  background: var(--tm-action-bg);
+  color: #fff;
   font-weight: 700;
+}
+
+.review-author__details {
+  display: grid;
+  min-width: 0;
+  gap: 0.2rem;
+}
+
+.review-author__details strong {
+  color: var(--tm-text);
+}
+
+.review-author__details span {
+  color: var(--tm-muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.reviews-state,
+.reviews-empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: clamp(2rem, 7vw, 4rem) 1rem;
+  color: var(--tm-muted);
+  text-align: center;
+}
+
+.reviews-state {
+  display: flex;
+  justify-content: center;
+}
+
+.reviews-state--error {
+  color: var(--tm-danger);
+}
+
+.reviews-empty h2,
+.reviews-empty p {
+  margin: 0;
+}
+
+.reviews-empty h2 {
+  color: var(--tm-text);
+}
+
+.reviews-empty p {
+  max-width: 36rem;
+  line-height: 1.6;
+}
+
+.reviews-empty__icon {
+  display: grid;
+  width: 3.2rem;
+  height: 3.2rem;
+  place-items: center;
+  border-radius: 1rem;
+  background: var(--tm-green-100);
+  color: var(--tm-green-900);
+  font-size: 1.3rem;
+}
+
+.reviews-carousel :deep(.p-carousel-prev-button),
+.reviews-carousel :deep(.p-carousel-next-button) {
+  color: var(--tm-green-900);
+}
+
+.reviews-carousel :deep(.p-carousel-indicator-button) {
+  background: var(--tm-border);
+}
+
+.reviews-carousel :deep(.p-carousel-indicator-active .p-carousel-indicator-button) {
+  background: var(--tm-green-800);
+}
+
+@media (max-width: 600px) {
+  .review-card {
+    min-height: 15rem;
+  }
 }
 </style>

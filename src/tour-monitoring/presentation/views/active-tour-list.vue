@@ -192,14 +192,14 @@ function confirmDelete(activeTour) {
 
 <style scoped>
 .active-tours {
-  --active-page: #f4f8f3;
+  --active-page: #e8f3ec;
   --active-surface: #ffffff;
-  --active-text: #17251c;
-  --active-muted: #45574a;
-  --active-accent: #25633b;
-  --active-accent-soft: #e6f1e7;
-  --active-border: #c4d4c6;
-  --active-error: #b42318;
+  --active-text: #1f2937;
+  --active-muted: #5b665d;
+  --active-accent: #1b5e3f;
+  --active-accent-soft: #e8f3ec;
+  --active-border: #c5d8ca;
+  --active-error: #ef4444;
   color-scheme: light;
   color: var(--active-text);
   background: var(--active-page);
@@ -429,10 +429,10 @@ function confirmDelete(activeTour) {
     --active-surface: #1b2a1f;
     --active-text: #f1f7f1;
     --active-muted: #c5d4c7;
-    --active-accent: #9bd3a4;
+    --active-accent: #8fcba5;
     --active-accent-soft: #293f2e;
     --active-border: #4c6651;
-    --active-error: #fca5a5;
+    --active-error: #ff8585;
     color-scheme: dark;
   }
 
