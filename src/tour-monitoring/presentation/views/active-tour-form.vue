@@ -21,6 +21,7 @@ const {errors: monitoringErrors, guides, guidesLoaded, activeTours, activeToursL
 const {addActiveTour, updateActiveTour, fetchGuides, fetchActiveTours} = monitoringStore;
 const {tours, toursLoaded, tourSchedules, tourSchedulesLoaded, checkpoints, checkpointsLoaded} =
     storeToRefs(tourManagementStore);
+const {checkpointErrors} = storeToRefs(tourManagementStore);
 const {fetchTours, fetchTourSchedules, fetchCheckpoints} = tourManagementStore;
 const {users, usersLoaded} = storeToRefs(iamStore);
 const {fetchUsers} = iamStore;
@@ -39,6 +40,19 @@ const form = ref({
   finishedAt: "",
 });
 
+function resetForm() {
+  form.value = {
+    tourId: null,
+    tourScheduleId: null,
+    guideId: null,
+    status: "IN_PROGRESS",
+    startedAt: "",
+    currentLatitude: "",
+    currentLongitude: "",
+    finishedAt: "",
+  };
+}
+
 const availableSchedules = computed(() => {
   if (form.value.tourId === null || form.value.tourId === "") return [];
   return tourSchedules.value
@@ -46,6 +60,8 @@ const availableSchedules = computed(() => {
       .map(schedule => {
         return {
           ...schedule,
+          id: String(schedule.id),
+          tourId: String(schedule.tourId),
           label: t("activeTour.schedule_option", {
             id: schedule.id,
             capacity: schedule.maxCapacity,
@@ -60,9 +76,15 @@ const guideOptions = computed(() => guides.value.map(guide => {
   const name = [user?.firstName, user?.lastName].filter(Boolean).join(" ");
   return {
     ...guide,
+    id: String(guide.id),
     displayName: name || t("activeTour.guide_fallback", {id: guide.id}),
   };
 }));
+
+const tourOptions = computed(() => tours.value.map(tour => ({
+  ...tour,
+  id: String(tour.id),
+})));
 
 const hasTours = computed(() => toursLoaded.value && tours.value.length > 0);
 const hasSchedulesForTour = computed(() => availableSchedules.value.length > 0);
@@ -125,10 +147,10 @@ function initializeEditForm() {
   }
 
   form.value = {
-    tourId: schedule.tourId,
-    tourScheduleId: activeTour.tourScheduleId,
-    guideId: activeTour.guideId,
-    status: activeTour.status || "IN_PROGRESS",
+    tourId: String(schedule.tourId),
+    tourScheduleId: String(activeTour.tourScheduleId),
+    guideId: String(activeTour.guideId),
+    status: activeTour.status,
     startedAt: toLocalDateTime(activeTour.startedAt),
     currentLatitude: activeTour.currentLatitude ?? "",
     currentLongitude: activeTour.currentLongitude ?? "",
@@ -137,7 +159,19 @@ function initializeEditForm() {
   editInitialized.value = true;
 }
 
-watch([activeToursLoaded, tourSchedulesLoaded], initializeEditForm, {immediate: true});
+watch(
+    [() => route.params.id, activeToursLoaded, tourSchedulesLoaded],
+    ([id]) => {
+      if (id) {
+        editInitialized.value = false;
+        initializeEditForm();
+      } else {
+        editInitialized.value = false;
+        resetForm();
+      }
+    },
+    {immediate: true}
+);
 
 onMounted(() => {
   if (!guidesLoaded.value) fetchGuides();
@@ -194,13 +228,17 @@ async function saveActiveTour() {
         </div>
       </header>
 
-      <form class="active-tour-form" novalidate @submit.prevent="saveActiveTour">
+      <form class="active-tour-form" :aria-busy="isEdit && !editInitialized" novalidate @submit.prevent="saveActiveTour">
+        <p v-if="isEdit && !editInitialized && !formErrors.length" class="active-tour-form__loading" role="status" aria-live="polite">
+          <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+          {{ t("common.loading") }}
+        </p>
         <div class="active-tour-field active-tour-field--wide">
           <label for="active-tour-tour">{{ t("activeTour.tour") }} <span aria-hidden="true">*</span></label>
           <pv-select
               id="active-tour-tour"
               v-model="form.tourId"
-              :options="tours"
+              :options="tourOptions"
               option-label="title"
               option-value="id"
               :loading="!toursLoaded || !checkpointsLoaded"
@@ -297,7 +335,7 @@ async function saveActiveTour() {
         <fieldset class="active-tour-location active-tour-field--wide">
           <legend>{{ t("activeTour.current-location") }} <span aria-hidden="true">*</span></legend>
           <p class="active-tour-location__hint">
-            {{ checkpointsLoaded ? t("activeTour.location-hint") : t("activeTour.loading-checkpoints") }}
+            {{ !checkpointsLoaded ? t("activeTour.loading-checkpoints") : checkpointErrors.length ? t("activeTour.checkpoints-unavailable") : t("activeTour.location-hint") }}
           </p>
           <div class="active-tour-location__fields">
             <div class="active-tour-field">
@@ -358,7 +396,7 @@ async function saveActiveTour() {
               type="submit"
               :label="isEdit ? t('activeTour.update') : t('activeTour.create')"
               icon="pi pi-save"
-              :disabled="!hasTours || !guidesLoaded || !usersLoaded || !tourSchedulesLoaded"
+              :disabled="!hasTours || !guidesLoaded || !usersLoaded || !tourSchedulesLoaded || (isEdit && !editInitialized)"
           />
           <pv-button
               type="button"
@@ -424,6 +462,15 @@ async function saveActiveTour() {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.2rem;
+}
+
+.active-tour-form__loading {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  color: var(--tm-muted);
 }
 
 .active-tour-field {

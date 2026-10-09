@@ -19,6 +19,7 @@ const useTourManagementStore = defineStore('tour-management',() => {
     const checkpoints = ref([])
 
     const errors = ref([])
+    const checkpointErrors = ref([])
 
     const toursLoaded = ref(false)
     const tourSchedulesLoaded = ref(false)
@@ -47,12 +48,15 @@ const useTourManagementStore = defineStore('tour-management',() => {
     }
 
     async function fetchCheckpoints() {
+        checkpointErrors.value = []
         try {
             const response = await tourManagementApi.getCheckpoints()
             checkpoints.value = CheckpointAssembler.toEntitiesFromResponse(response)
             checkpointsLoaded.value = true
         } catch (error) {
-            errors.value.push(error)
+            checkpoints.value = []
+            checkpointsLoaded.value = true
+            checkpointErrors.value.push(error)
             return false
         }
     }
@@ -150,6 +154,7 @@ const useTourManagementStore = defineStore('tour-management',() => {
         tourSchedules,
         checkpoints,
         errors,
+        checkpointErrors,
         toursLoaded,
         tourSchedulesLoaded,
         checkpointsLoaded,

@@ -19,6 +19,7 @@ import {TourScheduleAssembler} from "../../tour-management/infrastructure/tour-s
 const tourMonitoringApi = new TourMonitoringApi();
 const tourManagementApi = new TourManagementApi();
 const iamApi = new IamApi();
+const deletingActiveTourIds = new Set();
 
 /**
  * Reactive store that exposes TourMonitoring commands and queries.
@@ -140,8 +141,7 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * @returns {ActiveTour|undefined} Matching activeTour, if available.
      */
     function getActiveTourById(id) {
-        let idNum = parseInt(id);
-        return activeTours.value.find(activeTour => activeTour["id"] === idNum);
+        return activeTours.value.find(activeTour => String(activeTour.id) === String(id));
     }
 
     /**
@@ -187,14 +187,20 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * @returns {void}
      */
     async function deleteActiveTour(activeTour) {
+        const id = String(activeTour.id);
+        if (deletingActiveTourIds.has(id)) return false;
+
+        deletingActiveTourIds.add(id);
         try {
             await tourMonitoringApi.deleteActiveTour(activeTour.id)
-            const index = activeTours.value.findIndex(c => c["id"] === activeTour.id);
+            const index = activeTours.value.findIndex(c => String(c.id) === id);
             if (index !== -1) activeTours.value.splice(index, 1);
             return true;
         } catch (error) {
             errors.value.push(error);
             return false;
+        } finally {
+            deletingActiveTourIds.delete(id);
         }
     }
 
