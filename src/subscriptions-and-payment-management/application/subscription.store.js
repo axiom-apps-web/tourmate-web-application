@@ -18,7 +18,7 @@ export const useSubscriptionStore = defineStore('subscription', () => {
       const data = await api.getPlans();
       plans.value = SubscriptionAssembler.toPlanEntities(data);
     } catch (error) {
-      errors.value.push('Error al cargar los planes.');
+      errors.value.push(error);
     } finally {
       loading.value = false;
     }
