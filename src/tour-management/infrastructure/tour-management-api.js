@@ -1,6 +1,10 @@
 import {BaseApi} from "../../shared/infrastructure/base-api.js";
 import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
 
+const fallbackApiBaseUrl = import.meta.env.VITE_TOURMATE_PLATFORM_API_URL;
+const toursApiBaseUrl = import.meta.env.VITE_TOURS_API_URL || fallbackApiBaseUrl;
+const tourSchedulesApiBaseUrl = import.meta.env.VITE_TOUR_SCHEDULES_API_URL || fallbackApiBaseUrl;
+const checkpointsApiBaseUrl = import.meta.env.VITE_CHECKPOINTS_API_URL || fallbackApiBaseUrl;
 const toursEndpointPath = import.meta.env.VITE_TOURS_ENDPOINT_PATH
 const tourSchedulesEndpointPath = import.meta.env.VITE_TOUR_SCHEDULES_ENDPOINT_PATH
 const checkpointsEndpointPath = import.meta.env.VITE_CHECKPOINTS_ENDPOINT_PATH || '/checkpoints'
@@ -28,10 +32,16 @@ export class TourManagementApi extends BaseApi {
 
 
     constructor() {
-        super();
+        super(toursApiBaseUrl);
         this.#toursEndpoint = new BaseEndpoint(this, toursEndpointPath);
-        this.#tourSchedulesEndpoint = new BaseEndpoint(this, tourSchedulesEndpointPath);
-        this.#checkpointsEndpoint = new BaseEndpoint(this, checkpointsEndpointPath);
+        this.#tourSchedulesEndpoint = new BaseEndpoint(
+            new BaseApi(tourSchedulesApiBaseUrl),
+            tourSchedulesEndpointPath
+        );
+        this.#checkpointsEndpoint = new BaseEndpoint(
+            new BaseApi(checkpointsApiBaseUrl),
+            checkpointsEndpointPath
+        );
     }
 
     getTours() {

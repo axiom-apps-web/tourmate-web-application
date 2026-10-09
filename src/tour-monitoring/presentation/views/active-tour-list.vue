@@ -123,12 +123,14 @@ function confirmDelete(activeTour) {
     <div
         v-else-if="activeTours.length"
         class="active-tours__grid"
+        role="list"
         :aria-label="t('activeTours.list-title')"
     >
       <article
           v-for="activeTour in activeTours"
           :key="activeTour.id"
           class="tour-card"
+          role="listitem"
           :aria-labelledby="`active-tour-title-${activeTour.id}`"
       >
         <div class="tour-card__top">
@@ -187,7 +189,7 @@ function confirmDelete(activeTour) {
       </article>
     </div>
 
-    <div v-else class="active-tours__empty">
+    <div v-else-if="activeToursLoaded && !errors.length" class="active-tours__empty">
       <span class="active-tours__empty-icon" aria-hidden="true">
         <i class="pi pi-map"></i>
       </span>
@@ -361,11 +363,13 @@ function confirmDelete(activeTour) {
 }
 
 .tour-card__detail dd {
+  min-width: 0;
   margin: 0;
   color: var(--active-text);
   font-size: 0.9rem;
   font-weight: 600;
   text-align: right;
+  overflow-wrap: anywhere;
 }
 
 .tour-card__actions {

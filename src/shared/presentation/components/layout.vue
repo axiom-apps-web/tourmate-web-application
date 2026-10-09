@@ -65,7 +65,7 @@ function closeDrawer() {
               v-for="item in items"
               :key="item.label"
               :to="item.to"
-              :aria-current="route.path === item.to ? 'page' : undefined"
+              :aria-current="route.path === item.to || route.path.startsWith(`${item.to}/`) ? 'page' : undefined"
               class="navigation-link"
           >
             {{ t(item.label) }}
@@ -86,7 +86,7 @@ function closeDrawer() {
               v-for="item in items"
               :key="item.label"
               :to="item.to"
-              :aria-current="route.path === item.to ? 'page' : undefined"
+              :aria-current="route.path === item.to || route.path.startsWith(`${item.to}/`) ? 'page' : undefined"
               class="navigation-link"
               @click="closeDrawer"
           >
@@ -242,7 +242,7 @@ function closeDrawer() {
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1200px) {
   .mobile-menu-button {
     display: inline-flex;
   }

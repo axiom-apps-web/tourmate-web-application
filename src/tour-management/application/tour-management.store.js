@@ -24,31 +24,37 @@ const useTourManagementStore = defineStore('tour-management',() => {
     const tourSchedulesLoaded = ref(false)
     const checkpointsLoaded = ref(false)
 
-    function fetchTours() {
-        tourManagementApi.getTours().then((response) => {
+    async function fetchTours() {
+        try {
+            const response = await tourManagementApi.getTours()
             tours.value = TourAssembler.toEntitiesFromResponse(response)
             toursLoaded.value = true
-        }).catch((error) => {
+        } catch (error) {
             errors.value.push(error)
-        })
+            return false
+        }
     }
 
-    function fetchTourSchedules() {
-        tourManagementApi.getTourSchedules().then((response) => {
+    async function fetchTourSchedules() {
+        try {
+            const response = await tourManagementApi.getTourSchedules()
             tourSchedules.value = TourScheduleAssembler.toEntitiesFromResponse(response)
             tourSchedulesLoaded.value = true
-        }).catch((error) => {
+        } catch (error) {
             errors.value.push(error)
-        })
+            return false
+        }
     }
 
-    function fetchCheckpoints() {
-        tourManagementApi.getCheckpoints().then((response) => {
+    async function fetchCheckpoints() {
+        try {
+            const response = await tourManagementApi.getCheckpoints()
             checkpoints.value = CheckpointAssembler.toEntitiesFromResponse(response)
             checkpointsLoaded.value = true
-        }).catch((error) => {
+        } catch (error) {
             errors.value.push(error)
-        })
+            return false
+        }
     }
 
     function getTourById(id) {
@@ -56,34 +62,43 @@ const useTourManagementStore = defineStore('tour-management',() => {
         return tours.value.find(tour => tour.id === idNum)
     }
 
-    function addTour(tour) {
-        tourManagementApi.createTour(tour).then((response) => {
+    async function addTour(tour) {
+        try {
+            const response = await tourManagementApi.createTour(tour)
             const resource = response.data
             const newTour = TourAssembler.toEntityFromResource(resource)
             tours.value.push(newTour)
-        }).catch((error) => {
+            return true
+        } catch (error) {
             errors.value.push(error)
-        })
+            return false
+        }
     }
 
-    function updateTour(tour) {
-        tourManagementApi.updateTour(tour).then((response) => {
+    async function updateTour(tour) {
+        try {
+            const response = await tourManagementApi.updateTour(tour)
             const resource = response.data
             const updatedTour = TourAssembler.toEntityFromResource(resource)
             const index = tours.value.findIndex(tour => tour.id === updatedTour.id)
             if(index !== -1) tours.value[index] = updatedTour
-        }).catch((error) => {
+            return true
+        } catch (error) {
             errors.value.push(error)
-        })
+            return false
+        }
     }
 
-    function deleteTour(tour) {
-        tourManagementApi.deleteTour(tour.id).then(() => {
+    async function deleteTour(tour) {
+        try {
+            await tourManagementApi.deleteTour(tour.id)
             const index = tours.value.findIndex(t => t.id === tour.id)
             if (index !== -1) tours.value.splice(index,1)
-        }).catch((error) => {
+            return true
+        } catch (error) {
             errors.value.push(error)
-        })
+            return false
+        }
     }
 
     function getTourScheduleById(id) {
@@ -91,34 +106,43 @@ const useTourManagementStore = defineStore('tour-management',() => {
         return tourSchedules.value.find(ts => ts.id === idNum)
     }
 
-    function addTourSchedule(tourSchedule) {
-        tourManagementApi.createTourSchedule(tourSchedule).then((response) => {
+    async function addTourSchedule(tourSchedule) {
+        try {
+            const response = await tourManagementApi.createTourSchedule(tourSchedule)
             const resource = response.data
             const newTourSchedule = TourScheduleAssembler.toEntityFromResource(resource)
             tourSchedules.value.push(newTourSchedule)
-        }).catch((error) => {
+            return true
+        } catch (error) {
             errors.value.push(error)
-        })
+            return false
+        }
     }
 
-    function updateTourSchedule(tourSchedule) {
-        tourManagementApi.updateTourSchedule(tourSchedule).then((response) => {
+    async function updateTourSchedule(tourSchedule) {
+        try {
+            const response = await tourManagementApi.updateTourSchedule(tourSchedule)
             const resource = response.data
             const updatedTourSchedule = TourScheduleAssembler.toEntityFromResource(resource)
             const index = tourSchedules.value.findIndex(ts => ts.id === updatedTourSchedule.id)
             if (index !== -1) tourSchedules.value[index] = updatedTourSchedule
-        }).catch((error) => {
+            return true
+        } catch (error) {
             errors.value.push(error)
-        })
+            return false
+        }
     }
 
-    function deleteTourSchedule(tourSchedule) {
-        tourManagementApi.deleteTourSchedule(tourSchedule.id).then(() => {
+    async function deleteTourSchedule(tourSchedule) {
+        try {
+            await tourManagementApi.deleteTourSchedule(tourSchedule.id)
             const index = tourSchedules.value.findIndex(ts => ts.id === tourSchedule.id)
             if (index !== -1) tourSchedules.value.splice(index,1)
-        }).catch((error) => {
+            return true
+        } catch (error) {
             errors.value.push(error)
-        })
+            return false
+        }
     }
 
     return {

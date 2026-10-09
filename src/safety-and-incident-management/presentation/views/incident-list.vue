@@ -66,7 +66,7 @@ function confirmDelete(incident) {
       <pv-button :label="t('incidents.new')" icon="pi pi-plus" @click="openNewIncident" />
     </header>
 
-    <div v-if="incidentsLoaded" class="incident-metrics" :aria-label="t('incidents.total_cases')">
+    <div v-if="incidentsLoaded" class="incident-metrics" role="group" :aria-label="t('incidents.total_cases')">
       <article v-for="metric in caseMetrics" :key="metric.label" class="incident-metric surface-card">
         <span class="incident-metric__icon" aria-hidden="true"><i :class="metric.icon"></i></span>
         <span class="incident-metric__copy">
@@ -126,7 +126,7 @@ function confirmDelete(incident) {
           </div>
         </dl>
 
-        <div class="incident-card__actions" :aria-label="t('incidents.actions')">
+        <div class="incident-card__actions" role="group" :aria-label="t('incidents.actions')">
           <pv-button
               icon="pi pi-check"
               :label="t('incidents.resolve')"

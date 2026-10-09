@@ -2,7 +2,7 @@
 import {Tour} from "../../domain/model/tour.entity.js";
 import {computed, ref} from "vue";
 import {useI18n} from "vue-i18n";
-import {Button as PvButton, Card as PvCard, Menu as PvMenu, Tag as PvTag} from "primevue";
+import {Button as PvButton, Menu as PvMenu} from "primevue";
 
 const props = defineProps({
   tour: { type: Tour, required: true },
@@ -12,6 +12,7 @@ const emit = defineEmits(['edit', 'delete']);
 
 const {t} = useI18n();
 const menu = ref();
+const menuOpen = ref(false);
 const toggleMenu = (event) => menu.value.toggle(event);
 
 const menuItems = computed(() => [
@@ -28,28 +29,6 @@ const menuItems = computed(() => [
   }
 ]);
 
-const menuTokens = {
-  background: "#ffffff",
-  borderColor: "#e7ecea",
-  borderRadius: "0.75rem",
-  shadow: "0 8px 24px rgba(20, 40, 35, 0.15)",
-  list: {
-    padding: "0.4rem",
-    gap: "0.1rem",
-  },
-  item: {
-    color: "#14302c",
-    focusColor: "#14302c",
-    focusBackground: "#f3f6f5",
-    borderRadius: "0.5rem",
-    padding: "0.5rem 0.75rem",
-    icon: {
-      color: "#6b7a77",
-      focusColor: "#14302c",
-    },
-  },
-};
-
 </script>
 
 <template>
@@ -63,9 +42,10 @@ const menuTokens = {
           severity="secondary"
           :aria-label="`${t('tours.actions')}: ${tour.title}`"
           :aria-haspopup="true"
+          :aria-expanded="menuOpen"
           @click="toggleMenu"
       />
-      <pv-menu ref="menu" :model="menuItems" popup>
+      <pv-menu ref="menu" :model="menuItems" popup @show="menuOpen = true" @hide="menuOpen = false">
         <template #item="{item, props: itemProps}">
           <a v-bind="itemProps.action" :class="['tour-menu-item', {'tour-menu-item-danger': item.danger}]">
             <i :class="item.icon" aria-hidden="true"></i>
@@ -78,7 +58,7 @@ const menuTokens = {
     <div class="tour-item__content">
       <h2 :id="`tour-title-${tour.id}`">{{ tour.title }}</h2>
       <p class="tour-item__description">{{ tour.description }}</p>
-      <div class="tour-item__tags" :aria-label="t('tours.difficulty')">
+      <div class="tour-item__tags" role="group" :aria-label="t('tours.difficulty')">
         <span class="tour-tag">{{ tour.difficulty }}</span>
         <span class="tour-tag tour-tag--muted">{{ t('tours.agency_id') }} · {{ tour.agencyId }}</span>
       </div>
