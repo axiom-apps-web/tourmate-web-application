@@ -34,7 +34,7 @@ const useFeedbackStore = defineStore('feedback', () => {
     }
 
     function getReviewById(id) {
-        return reviews.value.find(review => review.id === Number(id));
+        return reviews.value.find(review => String(review.id) === String(id));
     }
 
     function getTourTitle(tourId) {
@@ -49,10 +49,12 @@ const useFeedbackStore = defineStore('feedback', () => {
 
     /** Creates the review and, if there is text, its comment. */
     async function addReview(review) {
+        let createdReviewId = null;
         try {
             review.createdAt = new Date().toISOString();
             const response = await feedbackApi.createReview(ReviewAssembler.toReviewResource(review));
             review.id = response.data.id;
+            createdReviewId = review.id;
             if (review.comment.trim()) {
                 const commentResponse = await feedbackApi.createComment(ReviewAssembler.toCommentResource(review, review.id));
                 review.commentId = commentResponse.data.id;
@@ -60,6 +62,13 @@ const useFeedbackStore = defineStore('feedback', () => {
             reviews.value.push(review);
             return true;
         } catch (error) {
+            if (createdReviewId !== null) {
+                try {
+                    await feedbackApi.deleteReview(createdReviewId);
+                } catch (cleanupError) {
+                    errors.value.push(cleanupError);
+                }
+            }
             errors.value.push(error);
             return false;
         }
@@ -79,7 +88,7 @@ const useFeedbackStore = defineStore('feedback', () => {
                 await feedbackApi.deleteComment(review.commentId);
                 review.commentId = null;
             }
-            const index = reviews.value.findIndex(item => item.id === review.id);
+            const index = reviews.value.findIndex(item => String(item.id) === String(review.id));
             if (index !== -1) reviews.value[index] = review;
             return true;
         } catch (error) {
@@ -93,7 +102,7 @@ const useFeedbackStore = defineStore('feedback', () => {
         try {
             if (review.commentId) await feedbackApi.deleteComment(review.commentId);
             await feedbackApi.deleteReview(review.id);
-            reviews.value = reviews.value.filter(item => item.id !== review.id);
+            reviews.value = reviews.value.filter(item => String(item.id) !== String(review.id));
             return true;
         } catch (error) {
             errors.value.push(error);

@@ -1,6 +1,9 @@
 import { BaseApi } from "../../shared/infrastructure/base-api.js";
 import { BaseEndpoint } from "../../shared/infrastructure/base-endpoint.js";
 
+const fallbackApiBaseUrl = import.meta.env.VITE_TOURMATE_PLATFORM_API_URL;
+const activeToursApiBaseUrl = import.meta.env.VITE_ACTIVE_TOURS_API_URL || fallbackApiBaseUrl;
+const participantsApiBaseUrl = import.meta.env.VITE_PARTICIPANTS_API_URL || fallbackApiBaseUrl;
 const activeToursEndpointPath = import.meta.env.VITE_ACTIVE_TOURS_ENDPOINT_PATH;
 const participantsEndpointPath = import.meta.env.VITE_PARTICIPANTS_ENDPOINT_PATH;
 
@@ -24,9 +27,12 @@ export class TourMonitoringApi extends BaseApi {
 
     /** Creates endpoint clients for active tours and participants. */
     constructor() {
-        super();
+        super(activeToursApiBaseUrl);
         this.#activeToursEndpoint = new BaseEndpoint(this, activeToursEndpointPath);
-        this.#participantsEndpoint = new BaseEndpoint(this, participantsEndpointPath);
+        this.#participantsEndpoint = new BaseEndpoint(
+            new BaseApi(participantsApiBaseUrl),
+            participantsEndpointPath
+        );
     }
 
     /**

@@ -1,133 +1,281 @@
-﻿/**
- * Application service store for the Safety and Incident Management bounded context.
- * Coordinates incident use cases and keeps UI-facing state using Pinia.
- *
- * @module useIncidentStore
- */
-import { defineStore } from "pinia";
+﻿import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { IncidentApi } from "../infrastructure/incident-api.js";
 import { IncidentAssembler } from "../infrastructure/incident-assembler.js";
 import { Incident } from "../domain/model/incident.entity.js";
+import { IncidentStatus } from "../domain/value-objects/incident-status.js";
 
 const incidentApi = new IncidentApi();
+const OFFLINE_STORAGE_KEY = 'tourmate_offline_incidents';
 
 export const useIncidentStore = defineStore('incident', () => {
-    /**
-     * List of incident entities.
-     * @type {import('vue').Ref<Incident[]>}
-     */
-    const incidents = ref([]);
+    const loadFromStorage = () => {
+        try {
+            const raw = localStorage.getItem(OFFLINE_STORAGE_KEY);
+            if (!raw) return [];
+            return JSON.parse(raw).map(item => new Incident(item));
+        } catch (e) {
+            console.error('Error loading incidents from localStorage', e);
+            return [];
+        }
+    };
 
-    /**
-     * List of errors encountered during API operations.
-     * @type {import('vue').Ref<Error[]>}
-     */
+    const saveToStorage = (incidentsList) => {
+        try {
+            const resources = incidentsList.map(incident => ({
+                id: incident.id,
+                uuid: incident.uuid,
+                activeTourId: incident.activeTourId,
+                reportedByUserId: incident.reportedByUserId,
+                description: incident.description,
+                latitude: incident.latitude,
+                longitude: incident.longitude,
+                reportedAt: incident.reportedAt,
+                status: incident.status,
+                severity: incident.severity,
+                isSynced: incident.isSynced,
+                resolutionNote: incident.resolutionNote,
+                reporterRole: incident.reporterRole,
+            }));
+            localStorage.setItem(OFFLINE_STORAGE_KEY, JSON.stringify(resources));
+        } catch (e) {
+            console.error('Error saving incidents to localStorage', e);
+        }
+    };
+
+    const incidents = ref(loadFromStorage());
+    const loading = ref(false);
     const errors = ref([]);
-
-    /**
-     * Whether incidents have been loaded from the API.
-     * @type {import('vue').Ref<boolean>}
-     */
+    const syncing = ref(false);
     const incidentsLoaded = ref(false);
 
-    /**
-     * Number of loaded incidents.
-     * @type {import('vue').ComputedRef<number>}
-     */
-    const incidentsCount = computed(() => {
-        return incidentsLoaded.value ? incidents.value.length : 0;
-    });
+    let syncRetryTimer = null;
+    let syncRetryAttempts = 0;
 
-    /**
-     * Loads incidents from infrastructure and updates application state.
-     * @returns {void}
-     */
-    function fetchIncidents() {
-        incidentApi.getIncidents().then(response => {
-            incidents.value = IncidentAssembler.toEntitiesFromResponse(response);
+    const incidentsCount = computed(() => incidents.value.length);
+
+    const pendingSyncIncidents = computed(() =>
+        incidents.value.filter(inc => !inc.isSynced)
+    );
+
+    // Listener de conectividad online
+    if (typeof window !== 'undefined') {
+        window.addEventListener('online', () => {
+            syncRetryAttempts = 0;
+            if (syncRetryTimer) clearTimeout(syncRetryTimer);
+            syncOfflineIncidents();
+        });
+    }
+
+    async function fetchIncidents() {
+        loading.value = true;
+        try {
+            const response = await incidentApi.getIncidents();
+            const remoteIncidents = IncidentAssembler.toEntitiesFromResponse(response).map(
+                inc => new Incident({ ...inc, isSynced: true })
+            );
+
+            const pendingLocal = pendingSyncIncidents.value.filter(
+                local => !remoteIncidents.some(remote =>
+                    (local.uuid && remote.uuid === local.uuid) || (local.id > 0 && remote.id === local.id)
+                )
+            );
+
+            const merged = [...pendingLocal, ...remoteIncidents];
+            incidents.value = merged;
+            saveToStorage(merged);
             incidentsLoaded.value = true;
-        }).catch(error => {
+            loading.value = false;
+
+            if (pendingSyncIncidents.value.length > 0 && navigator.onLine) {
+                syncOfflineIncidents();
+            }
+        } catch (error) {
             errors.value.push(error);
-        });
+            loading.value = false;
+        }
     }
 
-    /**
-     * Finds an incident entity by identifier.
-     * @param {number|string} id - Incident identifier.
-     * @returns {Incident|undefined} Matching incident, if available.
-     */
     function getIncidentById(id) {
-        let idNum = parseInt(id);
-        return incidents.value.find(incident => incident.id === idNum);
+        return computed(() => incidents.value.find(incident => String(incident.id) === String(id)));
     }
 
-    /**
-     * Creates an incident through infrastructure and appends it to local state.
-     * @param {Incident} incident - Incident entity to persist.
-     * @returns {void}
-     */
-    function addIncident(incident) {
-        incidentApi.createIncident(incident).then(response => {
+    async function addIncident(incident) {
+        if (!incident.uuid) {
+            incident.uuid = 'off-' + Math.random().toString(36).substring(2, 9);
+        }
+        incident.isSynced = false;
+
+        const updated = [incident, ...incidents.value];
+        incidents.value = updated;
+        saveToStorage(updated);
+
+        try {
+            const payload = {
+                uuid: incident.uuid,
+                activeTourId: incident.activeTourId,
+                reportedByUserId: incident.reportedByUserId,
+                description: incident.description,
+                latitude: incident.latitude,
+                longitude: incident.longitude,
+                reportedAt: incident.reportedAt,
+                status: incident.status,
+                severity: incident.severity,
+                resolutionNote: incident.resolutionNote,
+                reporterRole: incident.reporterRole,
+            };
+            const response = await incidentApi.createIncident(payload);
             const resource = response.data;
-            const newIncident = IncidentAssembler.toEntityFromResource(resource);
-            incidents.value.push(newIncident);
-        }).catch(error => {
-            errors.value.push(error);
-        });
+
+            const current = incidents.value;
+            const synced = current.map(inc => {
+                if (inc.uuid === incident.uuid) {
+                    return new Incident({
+                        ...inc,
+                        id: Number(resource.id),
+                        isSynced: true
+                    });
+                }
+                return inc;
+            });
+            incidents.value = synced;
+            saveToStorage(synced);
+            return true;
+        } catch (error) {
+            console.warn('Network unavailable, incident kept offline in queue.', error);
+            scheduleSyncRetry();
+            return true;
+        }
     }
 
-    /**
-     * Updates an existing incident and synchronizes local state.
-     * @param {Incident} incident - Incident entity with updated data.
-     * @returns {void}
-     */
-    function updateIncident(incident) {
-        incidentApi.updateIncident(incident).then(response => {
+    async function updateIncident(incident) {
+        const current = incidents.value;
+        const existing = current.find(item =>
+            (incident.id > 0 && item.id === incident.id) || (!!incident.uuid && item.uuid === incident.uuid)
+        );
+        if (!existing) return false;
+
+        if (!existing.isSynced) {
+            const updated = current.map(item => item === existing ? new Incident({ ...incident, isSynced: false }) : item);
+            incidents.value = updated;
+            saveToStorage(updated);
+            return true;
+        }
+
+        try {
+            const response = await incidentApi.updateIncident(incident);
             const resource = response.data;
-            const updatedIncident = IncidentAssembler.toEntityFromResource(resource);
-            const index = incidents.value.findIndex(i => i.id === updatedIncident.id);
-            if (index !== -1) incidents.value[index] = updatedIncident;
-        }).catch(error => {
+            const updatedIncident = new Incident({ ...IncidentAssembler.toEntityFromResource(resource), isSynced: true });
+            const updated = incidents.value.map(item => String(item.id) === String(updatedIncident.id) ? updatedIncident : item);
+            incidents.value = updated;
+            saveToStorage(updated);
+            return true;
+        } catch (error) {
             errors.value.push(error);
-        });
+            console.error('Error updating incident in API', error);
+            return false;
+        }
     }
 
-    /**
-     * Resolves an incident using domain logic and updates it.
-     * @param {Incident} incident - Incident entity to resolve.
-     * @returns {void}
-     */
-    function resolveIncident(incident) {
-        incident.resolve();
-        updateIncident(incident);
+    async function resolveIncident(incident, note = '') {
+        const resolvedIncident = new Incident({ ...incident });
+        resolvedIncident.resolve(note);
+        return updateIncident(resolvedIncident);
     }
 
-    /**
-     * Deletes an incident and removes it from local state.
-     * @param {Incident} incident - Incident entity to remove.
-     * @returns {void}
-     */
-    function deleteIncident(incident) {
-        incidentApi.deleteIncident(incident.id).then(() => {
-            const index = incidents.value.findIndex(i => i.id === incident.id);
-            if (index !== -1) incidents.value.splice(index, 1);
-        }).catch(error => {
+    async function deleteIncident(id) {
+        const current = incidents.value;
+        const incident = current.find(item => Number(item.id) === Number(id) || item.uuid === id);
+        if (!incident) return;
+
+        const index = current.indexOf(incident);
+        const filtered = current.filter(item => item !== incident);
+        incidents.value = filtered;
+        saveToStorage(filtered);
+
+        if (!incident.isSynced || Number(incident.id) <= 0) return;
+
+        try {
+            await incidentApi.deleteIncident(incident.id);
+        } catch (error) {
+            const latest = incidents.value;
+            if (!latest.some(item => item.id === incident.id)) {
+                const restored = [...latest];
+                restored.splice(Math.min(index, restored.length), 0, incident);
+                incidents.value = restored;
+                saveToStorage(restored);
+            }
             errors.value.push(error);
-        });
+            console.error('Error deleting incident from API', error);
+        }
+    }
+
+    async function syncOfflineIncidents() {
+        if (syncing.value) return;
+        const pending = pendingSyncIncidents.value;
+        if (pending.length === 0) return;
+
+        syncing.value = true;
+        try {
+            for (const incident of pending) {
+                if (!incident.uuid) {
+                    incident.uuid = `off-${Math.random().toString(36).substring(2, 9)}`;
+                }
+                const payload = {
+                    uuid: incident.uuid,
+                    activeTourId: incident.activeTourId,
+                    reportedByUserId: incident.reportedByUserId,
+                    description: incident.description,
+                    latitude: incident.latitude,
+                    longitude: incident.longitude,
+                    reportedAt: incident.reportedAt,
+                    status: incident.status,
+                    severity: incident.severity,
+                    resolutionNote: incident.resolutionNote,
+                    reporterRole: incident.reporterRole,
+                };
+                const response = await incidentApi.createIncident(payload);
+                const serverId = Number(response.data.id);
+
+                incidents.value = incidents.value.map(inc =>
+                    inc.uuid === incident.uuid ? new Incident({ ...inc, id: serverId, isSynced: true }) : inc
+                );
+            }
+            saveToStorage(incidents.value);
+            syncing.value = false;
+            syncRetryAttempts = 0;
+        } catch (error) {
+            syncing.value = false;
+            console.warn('Sync failed; pending incidents retained locally.', error);
+            scheduleSyncRetry();
+        }
+    }
+
+    function scheduleSyncRetry() {
+        if (syncRetryTimer !== null || syncRetryAttempts >= 3) return;
+        const delay = Math.min(1000 * 2 ** syncRetryAttempts, 8000);
+        syncRetryAttempts += 1;
+        syncRetryTimer = setTimeout(() => {
+            syncRetryTimer = null;
+            if (navigator.onLine) syncOfflineIncidents();
+        }, delay);
     }
 
     return {
         incidents,
+        loading,
         errors,
+        syncing,
         incidentsLoaded,
         incidentsCount,
+        pendingSyncIncidents,
         fetchIncidents,
         getIncidentById,
         addIncident,
         updateIncident,
         resolveIncident,
-        deleteIncident
+        deleteIncident,
+        syncOfflineIncidents
     };
 });
 

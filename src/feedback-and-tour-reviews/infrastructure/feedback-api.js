@@ -1,6 +1,11 @@
 import { BaseApi } from "../../shared/infrastructure/base-api.js";
 import { BaseEndpoint } from "../../shared/infrastructure/base-endpoint.js";
 
+const fallbackApiBaseUrl = import.meta.env.VITE_TOURMATE_PLATFORM_API_URL;
+const reviewsApiBaseUrl = import.meta.env.VITE_REVIEWS_API_URL || fallbackApiBaseUrl;
+const commentsApiBaseUrl = import.meta.env.VITE_COMMENTS_API_URL || fallbackApiBaseUrl;
+const toursApiBaseUrl = import.meta.env.VITE_TOURS_API_URL || fallbackApiBaseUrl;
+const usersApiBaseUrl = import.meta.env.VITE_USER_API_URL || fallbackApiBaseUrl;
 const reviewsEndpointPath  = import.meta.env.VITE_REVIEWS_ENDPOINT_PATH  || '/reviews';
 const commentsEndpointPath = import.meta.env.VITE_COMMENTS_ENDPOINT_PATH || '/comments';
 const toursEndpointPath    = import.meta.env.VITE_TOURS_ENDPOINT_PATH    || '/tours';
@@ -19,11 +24,14 @@ export class FeedbackApi extends BaseApi {
     #usersEndpoint;
 
     constructor() {
-        super();
+        super(reviewsApiBaseUrl);
         this.#reviewsEndpoint  = new BaseEndpoint(this, reviewsEndpointPath);
-        this.#commentsEndpoint = new BaseEndpoint(this, commentsEndpointPath);
-        this.#toursEndpoint    = new BaseEndpoint(this, toursEndpointPath);
-        this.#usersEndpoint    = new BaseEndpoint(this, usersEndpointPath);
+        this.#commentsEndpoint = new BaseEndpoint(
+            new BaseApi(commentsApiBaseUrl),
+            commentsEndpointPath
+        );
+        this.#toursEndpoint    = new BaseEndpoint(new BaseApi(toursApiBaseUrl), toursEndpointPath);
+        this.#usersEndpoint    = new BaseEndpoint(new BaseApi(usersApiBaseUrl), usersEndpointPath);
     }
 
     getReviews()                { return this.#reviewsEndpoint.getAll(); }

@@ -2,19 +2,18 @@
 import {Tour} from "../../domain/model/tour.entity.js";
 import {computed, ref} from "vue";
 import {useI18n} from "vue-i18n";
+import {Button as PvButton, Menu as PvMenu} from "primevue";
 
 const props = defineProps({
-  tour: {
-    type: Tour,
-    required: true
-  }
-})
+  tour: { type: Tour, required: true },
+});
 
 const emit = defineEmits(['edit', 'delete']);
 
 const {t} = useI18n();
 const menu = ref();
-const toggleMenu = (event) => menu.value?.toggle(event);
+const menuOpen = ref(false);
+const toggleMenu = (event) => menu.value.toggle(event);
 
 const menuItems = computed(() => [
   {
@@ -25,7 +24,7 @@ const menuItems = computed(() => [
   {
     label: t('tours.delete'),
     icon: 'pi pi-trash',
-    danger: true,
+    class: 'tour-menu-item-danger',
     command: () => emit('delete', props.tour)
   }
 ]);
@@ -43,22 +42,16 @@ const menuItems = computed(() => [
           severity="secondary"
           :aria-label="`${t('tours.actions')}: ${tour.title}`"
           :aria-haspopup="true"
+          :aria-expanded="menuOpen"
           @click="toggleMenu"
       />
-      <pv-menu ref="menu" :model="menuItems" popup>
-        <template #item="{item, props: itemProps}">
-          <a v-bind="itemProps.action" :class="['tour-menu-item', {'tour-menu-item--danger': item.danger}]">
-            <i :class="item.icon" aria-hidden="true"></i>
-            <span>{{ item.label }}</span>
-          </a>
-        </template>
-      </pv-menu>
+      <pv-menu ref="menu" :model="menuItems" popup @show="menuOpen = true" @hide="menuOpen = false" />
     </header>
 
     <div class="tour-item__content">
       <h2 :id="`tour-title-${tour.id}`">{{ tour.title }}</h2>
       <p class="tour-item__description">{{ tour.description }}</p>
-      <div class="tour-item__tags" :aria-label="t('tours.difficulty')">
+      <div class="tour-item__tags" role="group" :aria-label="t('tours.difficulty')">
         <span class="tour-tag">{{ tour.difficulty }}</span>
         <span class="tour-tag tour-tag--muted">{{ t('tours.agency_id') }} · {{ tour.agencyId }}</span>
       </div>
@@ -175,7 +168,11 @@ const menuItems = computed(() => [
   color: var(--tm-text);
 }
 
-:deep(.p-menu-item-content .tour-menu-item--danger) {
+.tour-menu-item-danger {
+  color: var(--tm-danger);
+}
+
+:deep(.p-menu-item-content) {
   color: var(--tm-danger);
 }
 </style>

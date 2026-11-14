@@ -19,6 +19,7 @@ import {TourScheduleAssembler} from "../../tour-management/infrastructure/tour-s
 const tourMonitoringApi = new TourMonitoringApi();
 const tourManagementApi = new TourManagementApi();
 const iamApi = new IamApi();
+const deletingActiveTourIds = new Set();
 
 /**
  * Reactive store that exposes TourMonitoring commands and queries.
@@ -86,46 +87,52 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * Loads activeTours from infrastructure and updates the application state.
      * @returns {void}
      */
-    function fetchActiveTours() {
-        tourMonitoringApi.getActiveTours().then(response => {
+    async function fetchActiveTours() {
+        try {
+            const response = await tourMonitoringApi.getActiveTours()
             activeTours.value = ActiveTourAssembler.toEntitiesFromResponse(response);
             activeToursLoaded.value = true;
-            console.log(activeToursLoaded.value);
-            console.log(activeTours.value);
-        }).catch(error => {
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
     /**
      * Loads participants from infrastructure and updates the application state.
      * @returns {void}
      */
-    function fetchParticipants() {
-        tourMonitoringApi.getParticipants().then(response => {
+    async function fetchParticipants() {
+        try {
+            const response = await tourMonitoringApi.getParticipants()
             participants.value = ParticipantAssembler.toEntitiesFromResponse(response);
             participantsLoaded.value = true;
-        }).catch(error => {
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
-    function fetchGuides() {
-        iamApi.getTourGuides().then(response => {
+    async function fetchGuides() {
+        try {
+            const response = await iamApi.getTourGuides()
             guides.value = TourGuideAssembler.toEntitiesFromResponse(response);
             guidesLoaded.value = true;
-        }).catch(error => {
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
-    function fetchTourSchedules() {
-        tourManagementApi.getTourSchedules().then(response => {
+    async function fetchTourSchedules() {
+        try {
+            const response = await tourManagementApi.getTourSchedules()
             tourSchedules.value = TourScheduleAssembler.toEntitiesFromResponse(response);
             tourSchedulesLoaded.value = true;
-        }).catch(error => {
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
     
     /**
@@ -134,8 +141,7 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * @returns {ActiveTour|undefined} Matching activeTour, if available.
      */
     function getActiveTourById(id) {
-        let idNum = parseInt(id);
-        return activeTours.value.find(activeTour => activeTour["id"] === idNum);
+        return activeTours.value.find(activeTour => String(activeTour.id) === String(id));
     }
 
     /**
@@ -143,14 +149,17 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * @param {ActiveTour} activeTour - ActiveTour entity to persist.
      * @returns {void}
      */
-    function addActiveTour(activeTour) {
-        tourMonitoringApi.createActiveTour(activeTour).then(response => {
+    async function addActiveTour(activeTour) {
+        try {
+            const response = await tourMonitoringApi.createActiveTour(activeTour)
             const resource = response.data;
             const newActiveTour = ActiveTourAssembler.toEntityFromResource(resource);
             activeTours.value.push(newActiveTour);
-        }).catch(error => {
+            return true;
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
     /**
@@ -158,15 +167,18 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * @param {ActiveTour} activeTour - ActiveTour entity with updated data.
      * @returns {void}
      */
-    function updateActiveTour(activeTour) {
-        tourMonitoringApi.updateActiveTour(activeTour).then(response => {
+    async function updateActiveTour(activeTour) {
+        try {
+            const response = await tourMonitoringApi.updateActiveTour(activeTour)
             const resource = response.data;
             const updatedActiveTour = ActiveTourAssembler.toEntityFromResource(resource);
             const index = activeTours.value.findIndex(c => c["id"] === updatedActiveTour.id);
             if (index !== -1) activeTours.value[index] = updatedActiveTour;
-        }).catch(error => {
+            return true;
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
     /**
@@ -174,13 +186,22 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * @param {ActiveTour} activeTour - ActiveTour entity to remove.
      * @returns {void}
      */
-    function deleteActiveTour(activeTour) {
-        tourMonitoringApi.deleteActiveTour(activeTour.id).then(() => {
-            const index = activeTours.value.findIndex(c => c["id"] === activeTour.id);
+    async function deleteActiveTour(activeTour) {
+        const id = String(activeTour.id);
+        if (deletingActiveTourIds.has(id)) return false;
+
+        deletingActiveTourIds.add(id);
+        try {
+            await tourMonitoringApi.deleteActiveTour(activeTour.id)
+            const index = activeTours.value.findIndex(c => String(c.id) === id);
             if (index !== -1) activeTours.value.splice(index, 1);
-        }).catch(error => {
+            return true;
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        } finally {
+            deletingActiveTourIds.delete(id);
+        }
     }
 
 
@@ -199,14 +220,17 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * @param {Participant} participant - Participant entity to persist.
      * @returns {void}
      */
-    function addParticipant(participant) {
-        tourMonitoringApi.createParticipant(participant).then(response => {
+    async function addParticipant(participant) {
+        try {
+            const response = await tourMonitoringApi.createParticipant(participant)
             const resource = response.data;
             const newParticipant = ParticipantAssembler.toEntityFromResource(resource);
             participants.value.push(newParticipant);
-        }).catch(error => {
+            return true;
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
     /**
@@ -214,15 +238,18 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * @param {Participant} participant - Participant entity with updated data.
      * @returns {void}
      */
-    function updateParticipant(participant) {
-        tourMonitoringApi.updateParticipant(participant).then(response => {
+    async function updateParticipant(participant) {
+        try {
+            const response = await tourMonitoringApi.updateParticipant(participant)
             const resource = response.data;
             const updatedParticipant = ParticipantAssembler.toEntityFromResource(resource);
             const index = participants.value.findIndex(t => t["id"] === updatedParticipant.id);
             if (index !== -1) participants.value[index] = updatedParticipant;
-        }).catch(error => {
+            return true;
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
     /**
@@ -230,13 +257,16 @@ const useTourMonitoringStore = defineStore('tourMonitoring', () => {
      * @param {Participant} participant - Participant entity to remove.
      * @returns {void}
      */
-    function deleteParticipant(participant) {
-        tourMonitoringApi.deleteParticipant(participant.id).then(() => {
+    async function deleteParticipant(participant) {
+        try {
+            await tourMonitoringApi.deleteParticipant(participant.id)
             const index = participants.value.findIndex(t => t["id"] === participant.id);
             if (index !== -1) participants.value.splice(index, 1);
-        }).catch(error => {
+            return true;
+        } catch (error) {
             errors.value.push(error);
-        });
+            return false;
+        }
     }
 
     return {

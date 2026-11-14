@@ -2,7 +2,10 @@
 import {BaseEndpoint} from "../../shared/infrastructure/base-endpoint.js";
 
 const incidentsEndpointPath = import.meta.env.VITE_INCIDENTS_ENDPOINT_PATH || '/incidents';
-const incidentsApiBaseUrl = import.meta.env.VITE_INCIDENTS_API_BASE_URL;
+const incidentsApiBaseUrl =
+    import.meta.env.VITE_INCIDENTS_API_URL ||
+    import.meta.env.VITE_INCIDENTS_API_BASE_URL ||
+    import.meta.env.VITE_TOURMATE_PLATFORM_API_URL;
 
 export class IncidentApi extends BaseApi {
     #incidentsEndpoint;
