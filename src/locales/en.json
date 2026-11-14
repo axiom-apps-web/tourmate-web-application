@@ -406,6 +406,113 @@
     "review_cases": "In review",
     "resolved_cases": "Resolved",
     "case_count": "{count} reported cases",
+    "status_values": {
+      "OPEN": "Open",
+      "IN_REVIEW": "In review",
+      "RESOLVED": "Resolved",
+      "CLOSED": "Closed"
+    },
+    "severity": "Severity",
+    "severity_values": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "CRITICAL": "Critical"
+    },
+    "reporter_role": "Reporter role",
+    "reporter_roles": {
+      "TOURIST": "Tourist",
+      "GUIDE": "Guide"
+    },
+    "synced": "Synced",
+    "offline": "Pending sync",
+    "sync_pending": "Sync {count} pending",
+    "pending_offline": "{count} incident(s) waiting to sync while offline.",
+    "resolution_note_prompt": "Please enter a resolution note (minimum 5 characters):",
+    "protocols": {
+      "title": "Guided response protocols for {severity}",
+      "critical": {
+        "evacuate": "Begin the emergency medical evacuation protocol immediately.",
+        "contact_base": "Establish a satellite or VHF radio connection with the operations base.",
+        "provide_oxygen": "Provide supplemental oxygen and monitor vital signs for 15 minutes."
+      },
+      "high": {
+        "stop_expedition": "Stop the active expedition.",
+        "provide_first_aid": "Assess hydration and provide first aid.",
+        "prepare_rescue": "Report the exact location to the lead guide and prepare the rescue kit."
+      },
+      "standard": {
+        "log_observation": "Record the observation in the route log.",
+        "monitor_participant": "Monitor the participant at the next Bluetooth checkpoint."
+      }
+    },
+    "safety": {
+      "dashboard_title": "Safety dashboard",
+      "dashboard_description": "Monitor incident locations, alerts, participant health and connected wearables.",
+      "refresh": "Refresh data",
+      "export_report": "Export report",
+      "manage_incidents": "Manage incidents",
+      "select_incident": "Select an incident",
+      "expedition": "Expedition",
+      "participant": "Participant",
+      "no_incidents_for_monitoring": "No incidents are available to monitor.",
+      "locations": "Locations",
+      "active_alerts": "Active alerts",
+      "participants_monitored": "Health readings",
+      "registered_wearables": "Registered wearables",
+      "location_hint": "Record or update the participant's reported location and compare it with the planned route.",
+      "route_latitude": "Expected route latitude",
+      "route_longitude": "Expected route longitude",
+      "update_incident_location": "Update incident location",
+      "record_location": "Record location",
+      "update_location": "Update location",
+      "expedition_id": "Expedition",
+      "tourist_id": "Participant",
+      "no_locations": "No additional location reports for this incident.",
+      "alerts": "Safety alerts",
+      "alerts_hint": "Alerts related to the selected incident and participant.",
+      "alert_types": {
+        "INCIDENT": "Incident report",
+        "ROUTE_DEVIATION": "Route deviation",
+        "HEALTH_CRITICAL": "Critical health reading",
+        "COMMUNICATION_LOST": "Communication lost"
+      },
+      "alert_status": {
+        "ACTIVE": "Active",
+        "ACKNOWLEDGED": "Acknowledged",
+        "RESOLVED": "Resolved"
+      },
+      "acknowledge": "Acknowledge",
+      "no_alerts": "No alerts for this incident.",
+      "health_status": "Participant health",
+      "health_hint": "Record a wearable reading for the selected participant.",
+      "device_id": "Wearable device",
+      "choose_device": "Select a registered device",
+      "heart_rate": "Heart rate",
+      "blood_oxygen": "Blood oxygen",
+      "battery": "Battery",
+      "connectivity": "Connectivity",
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "ingest_telemetry": "Save health reading",
+      "update_telemetry": "Update health reading",
+      "no_telemetry": "No health readings for this incident.",
+      "wearables": "Wearable devices",
+      "wearables_hint": "Link devices to the selected participant and keep their connection status up to date.",
+      "link_wearable": "Link device",
+      "update_device": "Update device",
+      "connectivity_values": {
+        "CONNECTED": "Connected",
+        "DISCONNECTED": "Disconnected"
+      },
+      "last_sync": "Last sync",
+      "no_wearables": "No wearable devices linked to this incident.",
+      "alert_messages": {
+        "route_deviation": "The participant has moved more than 500 meters from the planned route.",
+        "health_critical": "A critical participant health reading was detected.",
+        "communication_lost": "Communication with the participant's wearable has been lost."
+      }
+    },
     "status_open": "Open",
     "status_in_review": "In review",
     "status_resolved": "Resolved",
