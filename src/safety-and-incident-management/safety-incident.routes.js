@@ -1,8 +1,10 @@
 ﻿const incidentList = () => import('./presentation/views/incident-list.vue');
 const incidentForm = () => import('./presentation/views/incident-form.vue');
+const safetyDashboard = () => import('./presentation/views/safety-dashboard.vue');
 
 const safetyRoutes = [
     { path: '', name: 'incidents', component: incidentList, meta: { title: 'Incidents' } },
+    { path: 'safety-dashboard', name: 'safety-dashboard', component: safetyDashboard, meta: { title: 'Safety dashboard' } },
     { path: 'new', name: 'incident-new', component: incidentForm, meta: { title: 'New Incident' } },
     { path: ':id/edit', name: 'incident-edit', component: incidentForm, meta: { title: 'Edit Incident' } }
 ];
