@@ -53,6 +53,17 @@ export const useSubscriptionStore = defineStore('subscription', () => {
     }
   }
 
+  async function createPayment(data) {
+    const response = await api.createPayment(data);
+    await loadPayments();
+    return response.data;
+  }
+
+  async function updatePayment(id, data) {
+    const response = await api.updatePayment(id, data);
+    await loadPayments();
+    return response.data;
+  }
   async function saveResource(collection, entity, create, update, toEntity) {
     errors.value = [];
     try {
@@ -116,6 +127,9 @@ export const useSubscriptionStore = defineStore('subscription', () => {
     loadPlans,
     loadSubscriptions,
     loadPayments,
+    createPayment,
+    updatePayment,
+
     savePlan,
     deletePlan,
     saveSubscription,

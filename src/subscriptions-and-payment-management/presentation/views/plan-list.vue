@@ -76,11 +76,12 @@ async function remove(plan) {
 
     <p v-else-if="store.errors.length" role="alert">{{ store.errors.map(error => error.message).join(', ') }}</p>
 
-    <div v-else-if="store.plans.length" class="billing-records">
-      <article
+
+    <div v-else-if="store.plans.length" class="plans-grid">
+    <article
         v-for="plan in store.plans"
         :key="plan.id"
-        class="billing-record surface-card"
+        class="plan-card"
       >
         <h2>{{ plan.name }}</h2>
         <p>{{ t('billing_admin.plan_price', {currency: plan.priceCurrency, amount: plan.priceAmount}) }}</p>
@@ -211,4 +212,31 @@ async function remove(plan) {
     justify-content: center;
   }
 }
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 16px;
+}
+
+.plans-grid .plan-card {
+  background: white;
+  border: 1px solid #dce6df;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.plans-grid .plan-card h2 {
+  font-size: 20px;
+  color: #173d30;
+  margin: 0 0 20px;
+}
+
+.plans-grid .plan-card p {
+  font-size: 16px;
+  color: #276347;
+  margin: 0;
+}
+
 </style>
