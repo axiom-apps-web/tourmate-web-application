@@ -1,6 +1,6 @@
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref, reactive } from 'vue';
 import { useSubscriptionStore } from '../../application/subscription.store.js';
 
 const store = useSubscriptionStore();
@@ -53,12 +53,100 @@ const statusClass = (status) => {
     FAILED: 'failed'
   }[status] || 'default';
 };
+
+const showForm = ref(false);
+const editingId = ref(null);
+const saving = ref(false);
+const formError = ref('');
+
+const form = reactive({
+  agencyId: 1,
+  planId: 1,
+  amount: 59.90,
+  currency: 'PEN',
+  status: 'PENDING',
+  requestedAt: ''
+});
+
+function openNew() {
+  editingId.value = null;
+  formError.value = '';
+
+  Object.assign(form, {
+    agencyId: 1,
+    planId: 1,
+    amount: 59.90,
+    currency: 'PEN',
+    status: 'PENDING',
+    requestedAt: ''
+  });
+
+  showForm.value = true;
+}
+
+function openEdit(payment) {
+  editingId.value = payment.id;
+  formError.value = '';
+
+  Object.assign(form, {
+    agencyId: payment.agencyId,
+    planId: payment.planId,
+    amount: Number(payment.amount),
+    currency: payment.currency,
+    status: payment.status,
+    requestedAt: String(payment.requestedAt ?? '').slice(0, 16)
+  });
+
+  showForm.value = true;
+}
+
+async function savePayment() {
+  formError.value = '';
+
+  if (editingId.value !== null && !form.requestedAt) {
+    formError.value = 'La fecha es obligatoria al editar un pago.';
+    return;
+  }
+
+  saving.value = true;
+
+  const payload = {
+    agencyId: Number(form.agencyId),
+    planId: Number(form.planId),
+    amount: Number(form.amount),
+    currency: form.currency,
+    status: form.status,
+    requestedAt: form.requestedAt
+        ? `${form.requestedAt}:00`
+        : null
+  };
+
+  try {
+    if (editingId.value === null) {
+      await store.createPayment(payload);
+    } else {
+      await store.updatePayment(editingId.value, payload);
+    }
+
+    showForm.value = false;
+  } catch (error) {
+    formError.value =
+        error.response?.data?.message ||
+        'No se pudo guardar el pago. Revisa los datos.';
+  } finally {
+    saving.value = false;
+  }
+}
+
 </script>
 
 <template>
   <section class="p-4 payments-section">
     <div class="payments-heading">
       <h1>Pagos</h1>
+      <button type="button" class="payment-action" @click="openNew">
+        + Nuevo pago
+      </button>
       <span v-if="!store.loading && !store.errors.length" class="count">
         {{ store.payments.length }} registros
       </span>
@@ -92,12 +180,96 @@ const statusClass = (status) => {
           <p><strong>Plan:</strong> {{ payment.planId }}</p>
           <p><strong>Fecha:</strong> {{ formatDate(payment.requestedAt) }}</p>
         </div>
+        <button
+            type="button"
+            class="payment-edit"
+            @click="openEdit(payment)"
+        >
+          ✎ Editar pago
+        </button>
       </article>
     </div>
 
+
     <p v-else>No hay pagos disponibles.</p>
+
+    <div v-if="showForm" class="payment-form-panel">
+      <h2>
+        {{ editingId === null ? 'Nuevo pago' : 'Editar pago' }}
+      </h2>
+
+      <form @submit.prevent="savePayment" class="payment-form">
+        <label>
+          Agencia
+          <input v-model.number="form.agencyId" type="number" min="1" required />
+        </label>
+
+        <label>
+          ID del plan
+          <input v-model.number="form.planId" type="number" min="1" required />
+        </label>
+
+        <label>
+          Monto
+          <input
+              v-model.number="form.amount"
+              type="number"
+              min="0.01"
+              step="0.01"
+              required
+          />
+        </label>
+
+        <label>
+          Moneda
+          <select v-model="form.currency">
+            <option value="PEN">PEN</option>
+            <option value="USD">USD</option>
+          </select>
+        </label>
+
+        <label>
+          Estado
+          <select v-model="form.status">
+            <option value="PENDING">Pendiente</option>
+            <option value="PROCESSING">En proceso</option>
+            <option value="COMPLETED">Completado</option>
+            <option value="FAILED">Fallido</option>
+          </select>
+        </label>
+
+        <label>
+          Fecha de solicitud
+          <input
+              v-model="form.requestedAt"
+              type="datetime-local"
+              :required="editingId !== null"
+          />
+        </label>
+
+        <p v-if="formError" class="form-error" role="alert">
+          {{ formError }}
+        </p>
+
+        <div class="form-actions">
+          <button type="submit" class="payment-action" :disabled="saving">
+            {{ saving ? 'Guardando...' : 'Guardar pago' }}
+          </button>
+          <button
+              type="button"
+              class="payment-cancel"
+              :disabled="saving"
+              @click="showForm = false"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+
   </section>
 </template>
+
 
 <style scoped>
 .payments-section {
@@ -198,4 +370,71 @@ const statusClass = (status) => {
   font-size: 14px;
   color: #46574e;
 }
+
+.payment-action,
+.payment-edit {
+  background: #176448;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.payment-edit {
+  margin-top: 15px;
+  background: #e2efe7;
+  color: #176448;
+}
+
+.payment-form-panel {
+  background: white;
+  border: 1px solid #dce6df;
+  border-radius: 12px;
+  padding: 22px;
+  margin-top: 24px;
+}
+
+.payment-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.payment-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-weight: 600;
+  color: #173d30;
+}
+
+.payment-form input,
+.payment-form select {
+  padding: 10px;
+  border: 1px solid #ccd8d0;
+  border-radius: 7px;
+  font: inherit;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.payment-cancel {
+  background: #eeeeee;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.form-error {
+  color: #b42318;
+  grid-column: 1 / -1;
+}
+
 </style>
