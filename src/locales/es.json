@@ -407,6 +407,113 @@
     "review_cases": "En revisión",
     "resolved_cases": "Resueltos",
     "case_count": "{count} casos reportados",
+    "status_values": {
+      "OPEN": "Abierto",
+      "IN_REVIEW": "En revisión",
+      "RESOLVED": "Resuelto",
+      "CLOSED": "Cerrado"
+    },
+    "severity": "Severidad",
+    "severity_values": {
+      "LOW": "Baja",
+      "MEDIUM": "Media",
+      "HIGH": "Alta",
+      "CRITICAL": "Crítica"
+    },
+    "reporter_role": "Rol de quien reporta",
+    "reporter_roles": {
+      "TOURIST": "Turista",
+      "GUIDE": "Guía"
+    },
+    "synced": "Sincronizado",
+    "offline": "Pendiente de sincronización",
+    "sync_pending": "Sincronizar {count} pendientes",
+    "pending_offline": "{count} incidente(s) esperan sincronización mientras no hay conexión.",
+    "resolution_note_prompt": "Ingresa una nota de resolución (mínimo 5 caracteres):",
+    "protocols": {
+      "title": "Protocolos de respuesta para severidad {severity}",
+      "critical": {
+        "evacuate": "Inicia de inmediato el protocolo de evacuación médica de emergencia.",
+        "contact_base": "Establece comunicación satelital o por radio VHF con la base de operaciones.",
+        "provide_oxygen": "Administra oxígeno suplementario y monitorea los signos vitales durante 15 minutos."
+      },
+      "high": {
+        "stop_expedition": "Detén la expedición activa.",
+        "provide_first_aid": "Evalúa la hidratación y brinda primeros auxilios.",
+        "prepare_rescue": "Informa la ubicación exacta al guía principal y prepara el equipo de rescate."
+      },
+      "standard": {
+        "log_observation": "Registra la observación en la bitácora de ruta.",
+        "monitor_participant": "Monitorea al participante en el siguiente punto de control Bluetooth."
+      }
+    },
+    "safety": {
+      "dashboard_title": "Panel de seguridad",
+      "dashboard_description": "Supervisa ubicaciones de incidentes, alertas, salud de participantes y dispositivos conectados.",
+      "refresh": "Actualizar datos",
+      "export_report": "Exportar reporte",
+      "manage_incidents": "Gestionar incidentes",
+      "select_incident": "Selecciona un incidente",
+      "expedition": "Expedición",
+      "participant": "Participante",
+      "no_incidents_for_monitoring": "No hay incidentes disponibles para supervisar.",
+      "locations": "Ubicaciones",
+      "active_alerts": "Alertas activas",
+      "participants_monitored": "Lecturas de salud",
+      "registered_wearables": "Dispositivos registrados",
+      "location_hint": "Registra o actualiza la ubicación reportada del participante y compárala con la ruta prevista.",
+      "route_latitude": "Latitud prevista de la ruta",
+      "route_longitude": "Longitud prevista de la ruta",
+      "update_incident_location": "Actualizar ubicación del incidente",
+      "record_location": "Registrar ubicación",
+      "update_location": "Actualizar ubicación",
+      "expedition_id": "Expedición",
+      "tourist_id": "Participante",
+      "no_locations": "No hay ubicaciones adicionales para este incidente.",
+      "alerts": "Alertas de seguridad",
+      "alerts_hint": "Alertas relacionadas con el incidente y participante seleccionados.",
+      "alert_types": {
+        "INCIDENT": "Reporte de incidente",
+        "ROUTE_DEVIATION": "Desvío de ruta",
+        "HEALTH_CRITICAL": "Lectura de salud crítica",
+        "COMMUNICATION_LOST": "Comunicación perdida"
+      },
+      "alert_status": {
+        "ACTIVE": "Activa",
+        "ACKNOWLEDGED": "Reconocida",
+        "RESOLVED": "Resuelta"
+      },
+      "acknowledge": "Reconocer",
+      "no_alerts": "No hay alertas para este incidente.",
+      "health_status": "Salud del participante",
+      "health_hint": "Registra una lectura del dispositivo del participante seleccionado.",
+      "device_id": "Dispositivo",
+      "choose_device": "Selecciona un dispositivo registrado",
+      "heart_rate": "Frecuencia cardíaca",
+      "blood_oxygen": "Oxígeno en sangre",
+      "battery": "Batería",
+      "connectivity": "Conectividad",
+      "connected": "Conectado",
+      "disconnected": "Desconectado",
+      "ingest_telemetry": "Guardar lectura de salud",
+      "update_telemetry": "Actualizar lectura de salud",
+      "no_telemetry": "No hay lecturas de salud para este incidente.",
+      "wearables": "Dispositivos",
+      "wearables_hint": "Vincula dispositivos al participante seleccionado y mantén actualizado su estado de conexión.",
+      "link_wearable": "Vincular dispositivo",
+      "update_device": "Actualizar dispositivo",
+      "connectivity_values": {
+        "CONNECTED": "Conectado",
+        "DISCONNECTED": "Desconectado"
+      },
+      "last_sync": "Última sincronización",
+      "no_wearables": "No hay dispositivos vinculados a este incidente.",
+      "alert_messages": {
+        "route_deviation": "El participante se ha alejado más de 500 metros de la ruta prevista.",
+        "health_critical": "Se detectó una lectura crítica de salud del participante.",
+        "communication_lost": "Se perdió la comunicación con el dispositivo del participante."
+      }
+    },
     "status_open": "Abierto",
     "status_in_review": "En revisión",
     "status_resolved": "Resuelto",
