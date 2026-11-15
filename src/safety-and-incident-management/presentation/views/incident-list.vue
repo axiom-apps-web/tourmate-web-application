@@ -1,22 +1,22 @@
 <script setup>
-import {computed, onMounted, toRefs} from "vue";
-import {useRouter} from "vue-router";
-import {useI18n} from "vue-i18n";
-import {useConfirm} from "primevue";
+import { computed, onMounted, toRefs } from "vue";
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+import { useConfirm } from "primevue";
 import useIncidentStore from "../../application/incident.store.js";
 
 const router = useRouter();
 const confirm = useConfirm();
-const {t, locale} = useI18n();
+const { t, locale } = useI18n();
 const store = useIncidentStore();
-const {incidents, errors, incidentsLoaded} = toRefs(store);
-const {fetchIncidents, deleteIncident, resolveIncident} = store;
+const { incidents, errors, incidentsLoaded, pendingSyncIncidents, syncing } = toRefs(store);
+const { fetchIncidents, deleteIncident, resolveIncident, syncOfflineIncidents } = store;
 
 const caseMetrics = computed(() => [
-  {label: 'incidents.total_cases', value: incidents.value.length, icon: 'pi pi-folder-open'},
-  {label: 'incidents.open_cases', value: incidents.value.filter(item => item.status === 'OPEN').length, icon: 'pi pi-exclamation-circle'},
-  {label: 'incidents.review_cases', value: incidents.value.filter(item => item.status === 'IN_REVIEW').length, icon: 'pi pi-eye'},
-  {label: 'incidents.resolved_cases', value: incidents.value.filter(item => ['RESOLVED', 'CLOSED'].includes(item.status)).length, icon: 'pi pi-check-circle'}
+  { label: 'incidents.total_cases', value: incidents.value.length, icon: 'pi pi-folder-open' },
+  { label: 'incidents.open_cases', value: incidents.value.filter(item => item.status === 'OPEN').length, icon: 'pi pi-exclamation-circle' },
+  { label: 'incidents.review_cases', value: incidents.value.filter(item => item.status === 'IN_REVIEW').length, icon: 'pi pi-eye' },
+  { label: 'incidents.resolved_cases', value: incidents.value.filter(item => ['RESOLVED', 'CLOSED'].includes(item.status)).length, icon: 'pi pi-check-circle' }
 ]);
 
 onMounted(() => {
@@ -24,11 +24,15 @@ onMounted(() => {
 });
 
 function openNewIncident() {
-  router.push({name: "incident-new"});
+  router.push({ name: "incident-new" });
 }
 
 function openEditIncident(id) {
-  router.push({name: "incident-edit", params: {id}});
+  router.push({ name: "incident-edit", params: { id } });
+}
+
+function openDashboard() {
+  router.push({ name: "safety-dashboard" });
 }
 
 function formatReportedAt(value, options) {
@@ -40,9 +44,20 @@ function formatReportedAt(value, options) {
 }
 
 function statusLabel(status) {
-  const key = `incidents.status_${String(status || '').toLowerCase()}`;
+  const key = `incidents.status_values.${String(status || '').toUpperCase()}`;
   const translated = t(key);
   return translated === key ? (status || t('incidents.not_available')) : translated;
+}
+
+function triggerManualSync() {
+  syncOfflineIncidents();
+}
+
+function handleResolve(incident) {
+  const note = window.prompt(t('incidents.resolution_note_prompt') || 'Please enter a resolution note (minimum 5 characters):');
+  if (note !== null) {
+    resolveIncident(incident, note);
+  }
 }
 
 function confirmDelete(incident) {
@@ -50,7 +65,7 @@ function confirmDelete(incident) {
     message: t('incidents.delete_confirm'),
     header: t('incidents.delete'),
     icon: 'pi pi-exclamation-triangle',
-    accept: () => deleteIncident(incident)
+    accept: () => deleteIncident(incident.id)
   });
 }
 </script>
@@ -59,12 +74,21 @@ function confirmDelete(incident) {
   <section class="incident-page page-shell" aria-labelledby="incident-page-title">
     <header class="incident-header">
       <div>
-        <p class="incident-eyebrow">{{ t('shell.workspace') }}</p>
+        <p class="incident-eyebrow">{{ t('option.safety_and_incident') }}</p>
         <h1 id="incident-page-title" class="page-heading">{{ t('incidents.list_title') }}</h1>
         <p class="page-description">{{ t('incidents.list_description') }}</p>
       </div>
-      <pv-button :label="t('incidents.new')" icon="pi pi-plus" @click="openNewIncident" />
+      <div class="header-actions">
+        <pv-button :label="t('incidents.safety.dashboard_title')" icon="pi pi-chart-line" severity="secondary" outlined @click="openDashboard" />
+        <pv-button v-if="pendingSyncIncidents.length > 0" :label="t('incidents.sync_pending', { count: pendingSyncIncidents.length })" icon="pi pi-sync" class="sync-btn" :loading="syncing" @click="triggerManualSync" />
+        <pv-button :label="t('incidents.new')" icon="pi pi-plus" @click="openNewIncident" />
+      </div>
     </header>
+
+    <div v-if="pendingSyncIncidents.length > 0" class="offline-banner" role="status">
+      <i class="pi pi-cloud-off" aria-hidden="true"></i>
+      <span>{{ t('incidents.pending_offline', { count: pendingSyncIncidents.length }) }}</span>
+    </div>
 
     <div v-if="incidentsLoaded" class="incident-metrics" role="group" :aria-label="t('incidents.total_cases')">
       <article v-for="metric in caseMetrics" :key="metric.label" class="incident-metric surface-card">
@@ -78,7 +102,7 @@ function confirmDelete(incident) {
 
     <p v-if="!incidentsLoaded && !errors.length" class="incident-state" role="status" aria-live="polite">
       <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
-      {{ t('incidents.loading') }}
+      {{ t('common.loading') }}
     </p>
 
     <div v-else-if="errors.length" class="incident-state incident-state--error" role="alert">
@@ -93,20 +117,26 @@ function confirmDelete(incident) {
     </div>
 
     <div v-else class="incident-list">
-      <article v-for="incident in incidents" :key="incident.id" class="incident-card surface-card">
+      <article v-for="incident in incidents" :key="incident.id || incident.uuid" class="incident-card surface-card">
         <header class="incident-card__header">
           <div class="incident-card__case">
             <span class="incident-card__symbol" aria-hidden="true"><i class="pi pi-shield"></i></span>
             <div>
-              <p>{{ t('incidents.id') }} #{{ incident.id }}</p>
+              <p>{{ t('incidents.id') }} #{{ incident.id || incident.uuid }}</p>
               <time :datetime="incident.reportedAt">
-                {{ formatReportedAt(incident.reportedAt, {dateStyle: 'medium', timeStyle: 'short'}) }}
+                {{ formatReportedAt(incident.reportedAt, { dateStyle: 'medium', timeStyle: 'short' }) }}
               </time>
             </div>
           </div>
-          <span class="incident-status" :class="`incident-status--${String(incident.status).toLowerCase()}`">
-            {{ statusLabel(incident.status) }}
-          </span>
+          <div class="badges-group">
+            <span class="incident-status" :class="`incident-status--${String(incident.status).toLowerCase()}`">
+              {{ statusLabel(incident.status) }}
+            </span>
+            <span class="sync-badge" :class="{ 'synced': incident.isSynced, 'pending': !incident.isSynced }">
+              <i :class="incident.isSynced ? 'pi pi-cloud' : 'pi pi-cloud-slash'" aria-hidden="true"></i>
+              {{ incident.isSynced ? t('incidents.synced') : t('incidents.offline') }}
+            </span>
+          </div>
         </header>
 
         <p class="incident-card__description">{{ incident.description }}</p>
@@ -118,7 +148,11 @@ function confirmDelete(incident) {
           </div>
           <div>
             <dt>{{ t('incidents.reported_by') }}</dt>
-            <dd>#{{ incident.reportedByUserId }}</dd>
+            <dd>#{{ incident.reportedByUserId }} ({{ incident.reporterRole }})</dd>
+          </div>
+          <div>
+            <dt>{{ t('incidents.severity') }}</dt>
+            <dd>{{ t('incidents.severity_values.' + incident.severity) }}</dd>
           </div>
           <div>
             <dt>{{ t('incidents.latitude') }} / {{ t('incidents.longitude') }}</dt>
@@ -133,7 +167,7 @@ function confirmDelete(incident) {
               severity="success"
               outlined
               :disabled="['RESOLVED', 'CLOSED'].includes(incident.status)"
-              @click="resolveIncident(incident)"
+              @click="handleResolve(incident)"
           />
           <pv-button
               icon="pi pi-pencil"
@@ -165,6 +199,35 @@ function confirmDelete(incident) {
   align-items: flex-end;
   justify-content: space-between;
   gap: 1.25rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.sync-btn {
+  background: #b06000 !important;
+  border-color: #b06000 !important;
+}
+
+.offline-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px dashed #f29900;
+  border-radius: 10px;
+  color: #8a4b00;
+  background: #fef7e0;
+  font-size: 0.88rem;
+}
+
+.offline-banner i {
+  color: #f29900;
+  font-size: 1.2rem;
 }
 
 .incident-eyebrow {
@@ -238,6 +301,13 @@ function confirmDelete(incident) {
   gap: 1rem;
 }
 
+.badges-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
 .incident-card__symbol {
   display: grid;
   width: 2.75rem;
@@ -289,6 +359,27 @@ function confirmDelete(incident) {
 .incident-status--closed {
   background: var(--tm-green-100);
   color: var(--tm-green-900);
+}
+
+.sync-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.sync-badge.synced {
+  background-color: #e6f4ea;
+  color: #137333;
+}
+
+.sync-badge.pending {
+  background-color: #fef7e0;
+  color: #b06000;
+  border: 1px dashed #f29900;
 }
 
 .incident-card__description {
@@ -372,23 +463,20 @@ function confirmDelete(incident) {
     align-items: stretch;
     flex-direction: column;
   }
-
-  .incident-header > :deep(.p-button) {
-    align-self: flex-start;
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
   }
-
+  .header-actions > * {
+    width: 100%;
+  }
   .incident-card__header {
     align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
   }
-
   .incident-card__actions {
     justify-content: flex-start;
-  }
-}
-
-@media (max-width: 380px) {
-  .incident-metrics {
-    grid-template-columns: 1fr;
   }
 }
 </style>

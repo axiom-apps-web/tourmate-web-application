@@ -2,7 +2,7 @@ import { BaseApi } from "../../shared/infrastructure/base-api.js";
 import { BaseEndpoint } from "../../shared/infrastructure/base-endpoint.js";
 
 const fallbackApiBaseUrl = import.meta.env.VITE_TOURMATE_PLATFORM_API_URL;
-const activeToursApiBaseUrl = import.meta.env.VITE_ACTIVE_TOURS_API_URL || fallbackApiBaseUrl;
+const activeToursApiBaseUrl = import.meta.env.VITE_TOURMATE_PLATFORM_API_URL;
 const participantsApiBaseUrl = import.meta.env.VITE_PARTICIPANTS_API_URL || fallbackApiBaseUrl;
 const activeToursEndpointPath = import.meta.env.VITE_ACTIVE_TOURS_ENDPOINT_PATH;
 const participantsEndpointPath = import.meta.env.VITE_PARTICIPANTS_ENDPOINT_PATH;
