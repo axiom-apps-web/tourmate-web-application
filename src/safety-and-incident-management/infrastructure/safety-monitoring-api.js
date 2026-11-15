@@ -1,9 +1,6 @@
 import { BaseApi } from "../../shared/infrastructure/base-api.js";
 
-const incidentsApiBaseUrl =
-    import.meta.env.VITE_INCIDENTS_API_URL ||
-    import.meta.env.VITE_INCIDENTS_API_BASE_URL ||
-    import.meta.env.VITE_TOURMATE_PLATFORM_API_URL;
+const incidentsApiBaseUrl =  import.meta.env.VITE_TOURMATE_PLATFORM_API_URL;
 
 export class SafetyMonitoringApi extends BaseApi {
     constructor() {
