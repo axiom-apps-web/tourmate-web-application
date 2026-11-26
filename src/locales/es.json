@@ -7,7 +7,8 @@
     "management": "Gestión de tours",
     "safety_and_incident": "Incidentes",
     "subscriptions": "Planes y facturación",
-    "activeTours": "Tours activos"
+    "activeTours": "Tours activos",
+    "my_profile": "Mi perfil"
   },
   "shell": {
     "brand_caption": "OPERACIONES DE EXPEDICIÓN",
@@ -19,6 +20,31 @@
     "title": "Centro de operaciones",
     "platform": "Operaciones de tours",
     "open_navigation": "Abrir menú de navegación"
+  },
+  "profiles": {
+    "title": "Mi perfil",
+    "description": "Consulta la información personal y de contacto del perfil seleccionado.",
+    "select_label": "Seleccionar perfil",
+    "select_hint": "Elige un perfil existente para consultar sus datos.",
+    "profile_option": "Perfil #{id}",
+    "details_heading": "Información del perfil",
+    "profile_id": "ID de perfil: {id}",
+    "contact_heading": "Información de contacto",
+    "email": "Correo electrónico",
+    "address": "Dirección",
+    "role": "Rol",
+    "roles": {
+      "admin": "Administrador",
+      "agency_owner": "Propietario de agencia",
+      "guide": "Guía turístico",
+      "tourist": "Turista"
+    },
+    "not_available": "No disponible",
+    "loading": "Cargando perfiles...",
+    "load_error": "No se pudo cargar la información de los perfiles.",
+    "empty_title": "No hay perfiles disponibles",
+    "empty_description": "Cuando existan perfiles, podrás seleccionar uno y consultar aquí su información.",
+    "name_unavailable": "Nombre no disponible"
   },
   "subscription": {
     "dashboard_title": "Suscripción y Facturación",

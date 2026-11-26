@@ -7,7 +7,8 @@
     "management": "Tour management",
     "safety_and_incident": "Incidents",
     "subscriptions": "Plans & billing",
-    "activeTours": "Active Tours"
+    "activeTours": "Active Tours",
+    "my_profile": "My profile"
   },
   "shell": {
     "brand_caption": "EXPEDITION OPERATIONS",
@@ -19,6 +20,31 @@
     "title": "Operations center",
     "platform": "Tour operations",
     "open_navigation": "Open navigation menu"
+  },
+  "profiles": {
+    "title": "My profile",
+    "description": "View the personal and contact information for the selected profile.",
+    "select_label": "Select profile",
+    "select_hint": "Choose an existing profile to view its information.",
+    "profile_option": "Profile #{id}",
+    "details_heading": "Profile information",
+    "profile_id": "Profile ID: {id}",
+    "contact_heading": "Contact information",
+    "email": "Email",
+    "address": "Address",
+    "role": "Role",
+    "roles": {
+      "admin": "Administrator",
+      "agency_owner": "Agency owner",
+      "guide": "Tour guide",
+      "tourist": "Tourist"
+    },
+    "not_available": "Not available",
+    "loading": "Loading profiles...",
+    "load_error": "Could not load profile information.",
+    "empty_title": "No profiles available",
+    "empty_description": "Once profiles are available, you can select one and view its information here.",
+    "name_unavailable": "Name unavailable"
   },
   "subscription": {
     "dashboard_title": "Subscription & Billing",
