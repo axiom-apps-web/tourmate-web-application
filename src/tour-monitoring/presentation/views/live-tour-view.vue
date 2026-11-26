@@ -7,18 +7,21 @@ import useTourMonitoringStore from "../../application/tour-monitoring.store.js";
 import useTourManagementStore from "../../../tour-management/application/tour-management.store.js";
 import useIamStore from "../../../iam/application/iam.store.js";
 import {Participant} from "../../domain/model/participant.entity.js";
+import useProfileStore from "../../../profiles/application/profile.store.js";
 
 const route = useRoute();
 const {t, locale} = useI18n();
 const monitoringStore = useTourMonitoringStore();
 const tourManagementStore = useTourManagementStore();
 const iamStore = useIamStore();
+const profileStore = useProfileStore();
 
 const {activeTours, activeToursLoaded, participants, participantsLoaded, errors: monitoringErrors} =
     storeToRefs(monitoringStore);
 const {tours, toursLoaded, tourSchedules, tourSchedulesLoaded, errors: tourErrors} =
     storeToRefs(tourManagementStore);
 const {tourGuides, tourGuidesLoaded, users, usersLoaded, errors: iamErrors} = storeToRefs(iamStore);
+const {profiles,profilesLoaded, errors: profileErrors}=storeToRefs(profileStore);
 
 const participantSearch = ref('');
 const participantDialogVisible = ref(false);
@@ -28,7 +31,8 @@ const participantForm = ref({userId: null, joinedAt: ''});
 const errors = computed(() => [
   ...monitoringErrors.value,
   ...tourErrors.value,
-  ...iamErrors.value
+  ...iamErrors.value,
+    ...profileErrors.value,
 ]);
 const allDataLoaded = computed(() =>
   activeToursLoaded.value &&
@@ -36,7 +40,8 @@ const allDataLoaded = computed(() =>
       toursLoaded.value &&
       tourSchedulesLoaded.value &&
       tourGuidesLoaded.value &&
-      usersLoaded.value
+      usersLoaded.value &&
+    profilesLoaded.value
 );
 const isLoading = computed(() => !allDataLoaded.value && errors.value.length === 0);
 
@@ -68,13 +73,13 @@ const expeditionParticipants = computed(() =>
 
 const guideName = computed(() => {
   const guide = tourGuides.value.find(item => String(item.id) === String(activeTour.value?.guideId));
-  const user = guide?.user ?? users.value.find(item => String(item.id) === String(guide?.userId));
+  const user = guide?.user ?? profiles.value.find(item => String(item.id) === String(guide?.userId));
   return [user?.firstName, user?.lastName].filter(Boolean).join(' ') || t('liveMonitoring.guide_unassigned');
 });
 
 function participantName(participant) {
   const user = participant.user ??
-      users.value.find(item => String(item.id) === String(participant.userId));
+      profiles.value.find(item => String(item.id) === String(participant.userId));
   return [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
       t('liveMonitoring.participant_id', {id: participant.id});
 }
