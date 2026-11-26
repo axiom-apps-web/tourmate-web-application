@@ -25,7 +25,12 @@ export class ProfileAssembler {
             console.error(`${response.status}, ${response.statusText}`);
             return [];
         }
-        let resources = response.data instanceof Array ? response.data : response.data['profiles'];
+        const data = response.data;
+        const resources = Array.isArray(data)
+            ? data
+            : Array.isArray(data?.profiles)
+                ? data.profiles
+                : [data];
 
         return resources.map(resource => this.toEntityFromResource(resource));
     }
