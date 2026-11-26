@@ -10,17 +10,14 @@ export class User {
     /**
      * @param {Object} params Entity attributes.
      * @param {?number} [params.id=null] User identifier.
-     * @param {string} [params.email=''] User email address.
-     * @param {?UserRole} [params.role=null] User role reference.
-     * @param {string} [params.firstName=''] User first name.
-     * @param {string} [params.lastName=''] User last name.
-     */
-    constructor({ id = null, email = '', role = null, firstName = '', lastName = '' }) {
-        this.id = id;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
 
+     * @param {?UserRole} [params.role=null] User role reference.
+
+     */
+    constructor({ id = null, userName = '',passwordHash = '', role = null,  }) {
+        this.id = id;
+        this.userName = userName;
+        this.passwordHash = passwordHash;
 
         this.role = role;
     }
