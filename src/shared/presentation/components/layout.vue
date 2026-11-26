@@ -22,6 +22,7 @@ const items = [
   {label: 'option.monitoring', to: '/tour-monitoring/active-tours'},
   {label: 'option.management', to: '/tour-management/tours'},
   {label: 'option.feedback_and_reviews', to: '/feedback-and-tour-reviews/reviews'},
+  {label: 'option.my_profile', to: '/profiles/my-profile'},
   {label: 'option.subscriptions', to: '/subscriptions/plans'},
   {label: 'option.safety_and_incident', to: '/incidents'},
 

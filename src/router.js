@@ -4,6 +4,7 @@ import tourMonitoringRoutes from "./tour-monitoring/presentation/tour-monitoring
 import subscriptionRoutes from "./subscriptions-and-payment-management/presentation/subscription-routes.js";
 import tourManagementRoutes from "./tour-management/presentation/tour-management-routes.js";
 import feedbackAndTourReviewsRoutes from "./feedback-and-tour-reviews/presentation/feedback-and-tour-reviews-routes.js";
+import profileRoutes from "./profiles/presentation/profile-routes.js";
 
 import safetyRoutes from "./safety-and-incident-management/safety-incident.routes.js";
 
@@ -19,6 +20,7 @@ const routes = [
     { path: '/subscriptions', name: 'subscriptions', children: subscriptionRoutes},
     { path: '/tour-management', name: 'tour-management', children: tourManagementRoutes},
     { path: '/feedback-and-tour-reviews', name: 'feedback-and-tour-reviews', children: feedbackAndTourReviewsRoutes },
+    { path: '/profiles', name: 'profiles', children: profileRoutes },
 
     { path: '/incidents',     name: 'incidents-root', children: safetyRoutes },
 

@@ -6,6 +6,7 @@ const modules = [
   {title: 'home.tours_title', description: 'home.tours_description', icon: 'pi pi-map', to: '/tour-management/tours'},
   {title: 'home.monitoring_title', description: 'home.monitoring_description', icon: 'pi pi-compass', to: '/tour-monitoring/active-tours'},
   {title: 'home.incidents_title', description: 'home.incidents_description', icon: 'pi pi-shield', to: '/incidents'},
+  {title: 'option.my_profile', description: 'profiles.description', icon: 'pi pi-user', to: '/profiles/my-profile'},
   {title: 'option.feedback_and_reviews', description: 'reviews.list_subtitle', icon: 'pi pi-star', to: '/feedback-and-tour-reviews/reviews'}
 ];
 </script>
