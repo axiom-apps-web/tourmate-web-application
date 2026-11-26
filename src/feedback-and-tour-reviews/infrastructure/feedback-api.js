@@ -3,9 +3,10 @@ import { BaseEndpoint } from "../../shared/infrastructure/base-endpoint.js";
 
 const fallbackApiBaseUrl = import.meta.env.VITE_TOURMATE_PLATFORM_API_URL;
 const reviewsApiBaseUrl = import.meta.env.VITE_TOURMATE_PLATFORM_API_URL;
-const commentsApiBaseUrl = import.meta.env.VITE_COMMENTS_API_URL || fallbackApiBaseUrl;
-const toursApiBaseUrl = import.meta.env.VITE_TOURS_API_URL || fallbackApiBaseUrl;
-const usersApiBaseUrl = import.meta.env.VITE_USER_API_URL || fallbackApiBaseUrl;
+const commentsApiBaseUrl = import.meta.env.VITE_TOURMATE_PLATFORM_API_URL || fallbackApiBaseUrl;
+const toursApiBaseUrl = import.meta.env.VITE_TOURMATE_PLATFORM_API_URL || fallbackApiBaseUrl;
+const usersApiBaseUrl = import.meta.env.VITE_TOURMATE_PLATFORM_API_URL || fallbackApiBaseUrl;
+
 const reviewsEndpointPath  = import.meta.env.VITE_REVIEWS_ENDPOINT_PATH  || '/reviews';
 const commentsEndpointPath = import.meta.env.VITE_COMMENTS_ENDPOINT_PATH || '/comments';
 const toursEndpointPath    = import.meta.env.VITE_TOURS_ENDPOINT_PATH    || '/tours';
