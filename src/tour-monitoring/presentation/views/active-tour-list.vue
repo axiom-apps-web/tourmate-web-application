@@ -7,6 +7,7 @@ import {useConfirm} from "primevue";
 import useTourMonitoringStore from "../../application/tour-monitoring.store.js";
 import useTourManagementStore from "../../../tour-management/application/tour-management.store.js";
 import useIamStore from "../../../iam/application/iam.store.js";
+import useProfileStore from "../../../profiles/application/profile.store.js";
 
 const {t} = useI18n();
 const router = useRouter();
@@ -15,16 +16,19 @@ const confirm = useConfirm();
 const monitoringStore = useTourMonitoringStore();
 const tourManagementStore = useTourManagementStore();
 const iamStore = useIamStore();
+const profileStore = useProfileStore();
 
 const {activeTours, activeToursLoaded, errors: monitoringErrors} = storeToRefs(monitoringStore);
 const {tours, toursLoaded, tourSchedules, tourSchedulesLoaded, errors: tourErrors} =
     storeToRefs(tourManagementStore);
 const {tourGuides, tourGuidesLoaded, users, usersLoaded, errors: iamErrors} = storeToRefs(iamStore);
+const {profiles, profilesLoaded, errors: profilesErrors} = storeToRefs(profileStore);
 
 const errors = computed(() => [
   ...monitoringErrors.value,
   ...tourErrors.value,
-  ...iamErrors.value
+  ...iamErrors.value,
+  ...profilesErrors.value,
 ]);
 
 const isLoading = computed(() => {
@@ -33,7 +37,8 @@ const isLoading = computed(() => {
       toursLoaded.value &&
       tourSchedulesLoaded.value &&
       tourGuidesLoaded.value &&
-      usersLoaded.value;
+      usersLoaded.value &&
+      profilesLoaded.value;
 
   return !allDataLoaded && errors.value.length === 0;
 });
@@ -43,7 +48,8 @@ onMounted(() => {
   if (!toursLoaded.value) tourManagementStore.fetchTours();
   if (!tourSchedulesLoaded.value) tourManagementStore.fetchTourSchedules();
   if (!tourGuidesLoaded.value) iamStore.fetchTourGuides();
-  if (!usersLoaded.value) iamStore.fetchUsers();
+  if (!usersLoaded.value) iamStore.fetchUsers()
+  if (!profilesLoaded.value) profileStore.fetchProfiles();
 });
 
 function findById(items, id) {
@@ -59,11 +65,11 @@ function getTourTitle(activeTour) {
 
 function getGuideName(guideId) {
   const guide = findById(tourGuides.value, guideId);
+  const profile = findById(profiles.value, guide?.userId);
   const user = guide?.user ?? findById(users.value, guide?.userId);
-  const name = [user?.firstName, user?.lastName]
-      .filter(Boolean)
-      .join(' ');
-  return name || '—';
+  const profileName = profile?.fullName?.trim();
+  const userName = [user?.firstName, user?.lastName].filter(Boolean).join(' ').trim();
+  return profileName || userName || '—';
 }
 
 function getMaximumCapacity(tourScheduleId) {
